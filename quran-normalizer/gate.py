@@ -20,9 +20,18 @@ assert len(CARRIERS) == 29
 FATHA, DAMMA, KASRA, SUKUN = 'َ', 'ُ', 'ِ', 'ْ'
 MARK_INDEX = {FATHA: 0, DAMMA: 1, KASRA: 2, SUKUN: 3}   # الحالات الأربع
 VOWEL_OF = {FATHA: 'a', DAMMA: 'u', KASRA: 'i'}
-TANWIN_OF = {'ً': 'a', 'ٌ': 'u', 'ٍ': 'i'}
+TANWIN_OF = {'\u064B': 'a', '\u064C': 'u', '\u064D': 'i'}
+TANWIN_OF.update({'\u08F0': 'a', '\u08F1': 'u', '\u08F2': 'i'})   # التنوين المفتوح في المصحف
+WAQF = set('\u06D6\u06D7\u06D8\u06DA\u06DB\u06DC\u06E2')       # علامات الوقف: لا صوت لها، تُوسم
+SMALL_MADD = {'\u06E5', '\u06E6'}                                  # واو/ياء صغيرة: علامات مدّ
+ALIF_MAQ = '\u0649'                                                  # ى المقصورة
+MADDA_MARK, HAMZA_ABOVE, HAMZA_BELOW = '\u0653', '\u0654', '\u0655'
+TATWEEL = '\u0640'
+NON_PHONETIC = {'\u200f', '\u06de', '\u06e9', '\u06ed', '\u06e4', '\u06e7', '\u06e8', '\u06ec'}   # محرف اتجاه، ۞، ۩، ميم سفلية، مدّة صغيرة
 SHADDA, DAGGER, SMALL_SUKUN = 'ّ', 'ٰ', 'ۡ'
-MARKCHARS = set(MARK_INDEX) | set(TANWIN_OF) | {SHADDA, DAGGER, SMALL_SUKUN}
+MARKCHARS = set(MARK_INDEX) | set(TANWIN_OF) | {SHADDA, DAGGER, SMALL_SUKUN, MADDA_MARK, HAMZA_ABOVE, HAMZA_BELOW}
+SILENT_CARRIER = '\u06e0'                 # مستطيل صغير عمودي: الحامل لا يُنطق فيُهمل
+MARKCHARS |= WAQF | SMALL_MADD | {SILENT_CARRIER} | {'\u06e7', '\u06e8', '\u06ec', '\u06e4'}
 ALIF = 'ا'
 WASLA = 'ٱ'
 HAMZA_ALIF = {'أ': 'ء', 'إ': 'ء', 'آ': 'ء'}
@@ -65,6 +74,44 @@ def build_cells(word):
             i = elided[1]
             continue
         ch = word[i]
+        if ch in NON_PHONETIC:
+            if cells:
+                cells[-1].flags.append('NON_PHONETIC:' + format(ord(ch), 'x'))
+            i += 1
+            continue
+        if ch == TATWEEL:
+            marks, j = _marks_after(word, i + 1)
+            if any(m in (HAMZA_ABOVE, HAMZA_BELOW) for m in marks):
+                c = _cell_from_marks(len(cells), 'ء', marks, (i, j))
+                c.flags.append('TATWEEL_HAMZA_SEAT')
+                cells.append(c)
+            elif cells:
+                cells[-1].flags.append('TATWEEL')
+            i = j
+            continue
+        if ch in WAQF or ch in SMALL_MADD or ch == MADDA_MARK:
+            if cells:
+                cells[-1].flags.append('WAQF' if ch in WAQF else 'SMALL_MADD_MARK' if ch in SMALL_MADD else 'MADDA_MARK')
+            i += 1
+            continue
+        if ch == ALIF_MAQ:
+            # ى مقصورة: مدّ بعد الفتحة أو المنوّنة بالفتح، أو ياء مدّ بعد الكسرة
+            if cells and cells[-1].vowel in ('a', 'i') and not cells[-1].long:
+                cells[-1].long = 2
+                cells[-1].flags.append('MADD_ALIF_MAQSURA')
+                i += 2 if i + 1 < n and word[i + 1] == DAGGER else 1   # ىٰ: الخنجرية جزء منها
+                continue
+            raise ValueError(f'ى بلا حامل مدّ عند الموضع {i} في {word!r}')
+        if ch == ALIF and _marks_after(word, i + 1)[0] and any(m in (HAMZA_ABOVE, HAMZA_BELOW) for m in _marks_after(word, i + 1)[0]):
+            marks, j = _marks_after(word, i + 1)
+            c = _cell_from_marks(len(cells), 'ء', marks, (i, j))
+            c.flags.append('HAMZA_ON_ALIF')
+            if MADDA_MARK in marks:
+                c.vowel, c.sukun, c.long = 'a', False, 2       # أٓ = ʔā: المدّة تعني فتحة طويلة
+                c.flags = [f for f in c.flags if f != 'UNMARKED'] + ['MADDA_AS_LONG_A']
+            cells.append(c)
+            i = j
+            continue
         if ch in MADD_OF and i + 1 <= n:
             # واو/ياء بلا حركة بعد الحركة المطابقة = مدّ
             nxt_marks = _marks_after(word, i + 1)[0]
@@ -74,10 +121,17 @@ def build_cells(word):
                 i += 1
                 continue
         if ch == ALIF or ch == DAGGER:
+            prev_base = next((word[k] for k in range(i - 1, -1, -1) if word[k] not in MARKCHARS), '')
+            if ch == ALIF and prev_base == 'و' and _marks_after(word, i + 1)[1] == n:
+                # ألف واو الجماعة في آخر الكلمة (كَفَرُواْ): صامتة
+                if cells:
+                    cells[-1].flags.append('SILENT_ALIF_WAW_PLURAL')
+                i = _marks_after(word, i + 1)[1]      # الألف مع سكونها أو خنجريتها
+                continue
             if cells and cells[-1].vowel == 'a' and not cells[-1].long:
                 cells[-1].long = 2
                 cells[-1].flags.append('MADD_ALIF')
-                i += 1
+                i = _marks_after(word, i + 1)[1] if ch == ALIF else i + 1
                 continue
             if not cells and ch == ALIF:
                 # ألف مكتوبة في أول الكلمة (ال، ا...): حامل ء بفتحة مستنتجة، موسومة
@@ -98,14 +152,19 @@ def build_cells(word):
                 c.vowel = 'a' if word.startswith('ٱل') else 'i'
                 c.sukun = False
                 c.flags = [f for f in c.flags if f != 'UNMARKED'] + ['INFERRED_VOWEL']
-            if ch == 'آ':
-                c.long = 2
-                c.flags.append('MADDA')
+            if ch == 'آ' or MADDA_MARK in marks:
+                c.vowel, c.sukun, c.long = 'a', False, 2
+                c.flags = [f for f in c.flags if f != 'UNMARKED'] + ['MADDA_AS_LONG_A']
             cells.append(c)
             i = j
             continue
         if ch in CARRIERS:
             marks, j = _marks_after(word, i + 1)
+            if SILENT_CARRIER in marks:
+                if cells:
+                    cells[-1].flags.append('SILENT_CARRIER_DROPPED')
+                i = j
+                continue
             if SHADDA in marks:
                 first = Cell(len(cells), ch, sukun=True, shadda='first', span=(i, j))
                 rest = [m for m in marks if m != SHADDA]
@@ -278,3 +337,37 @@ def decide(word):
     else:
         res.update(status='PENDING', reason='أكثر من وجه، والبدائل محفوظة')
     return res
+
+
+def decide_from_syllables(word):
+    """البوابة على ناتج التقطيع: تأخذ المقاطع التي يُنتجها syllables() وتبني منها الخلايا.
+    لا تُطبَّق على نص المصحف مباشرة."""
+    from syllab import syllables
+    res = syllables(word)
+    if res is None:
+        return {'word': word, 'status': 'DIVINE_SKIPPED', 'reason': 'لفظ الجلالة', 'candidates': [], 'syllables': []}
+    parts, shapes, bad, norm = res
+    cells, sylls = [], []
+    for part, shape in zip(parts, shapes):
+        pc = build_cells(part)
+        start = len(cells)
+        for c in pc:
+            c.idx = len(cells)
+            cells.append(c)
+        sylls.append((shape, (start, len(cells) - 1)))
+    valid = (not bad) and all(sh in SIX and (k == len(sylls) - 1 or sh not in FINAL_ONLY or
+             (k + 1 < len(sylls) and cells[sylls[k][1][1]].carrier == cells[sylls[k + 1][1][0]].carrier))
+             for k, (sh, _) in enumerate(sylls))
+    res_out = {'word': word, 'syllables': [(sh, sp, True, 'مقطع مرخّص') for sh, sp in sylls],
+               'cells': [(c.idx, c.carrier, c.vowel, c.long, c.shadda, c.flags) for c in cells]}
+    if not valid:
+        res_out.update(status='REJECTED', reason='تقطيع غير مرخّص أو بقايا', candidates=[])
+        return res_out
+    key = tuple((c.carrier, c.vowel, c.sukun, c.long) for c in cells)
+    cands = [e for e in LEXICON if _key(e['word']) == key]
+    res_out['candidates'] = [dict(cls=e['cls'], built=e['built'], role=e['role'], witness=e['witness']) for e in cands]
+    if not cands:
+        res_out.update(status='NO_CANDIDATE', reason='غياب من قائمة غير مستنفدة ليس دليل رفض')
+    else:
+        res_out.update(status='PENDING', reason='وجه واحد، ولم يثبت استنفاد البدائل' if len(cands) == 1 else 'أكثر من وجه، والبدائل محفوظة')
+    return res_out
