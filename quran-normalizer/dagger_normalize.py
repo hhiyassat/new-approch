@@ -36,8 +36,6 @@ ALIF_FORMS = '\u0627\u0671\u0625\u0623\u0622'   # ا ٱ إ أ آ
 HAMZA_ON_ALIF = '\u0623\u0625'                  # أ إ
 CARRIERS = '\u0648\u0649'                       # و ى
 SOLAR = set('تثدذرزسشصضطظلن')
-RELATIVE_PRONOUNS = {'الذي', 'الذين', 'التي', 'اللذان', 'اللذين', 'اللتان', 'اللتين',
-                    'اللاتي', 'اللواتي', 'اللائي', 'الذا', 'الذى'}
 MUQATTAAT = {'حم', 'طسم', 'الم', 'الر', 'المر', 'المص', 'كهيعص', 'طه', 'يس', 'طس',
              'ص', 'ق', 'ن', 'عسق'}
 
@@ -89,9 +87,6 @@ _TANWIN_OR_VOWEL = (FATHA, DAMMA, KASRA, '\u064B', '\u064C', '\u064D')
 # ---------------------------------------------------------------- المراحل
 def normalize_article(text, counts):
     """«ال» بعد سابقة أو في أول الكلمة: قبل الشمسي تُحذف اللام، قبل القمري تبقى."""
-    if _skeleton(text).replace('ٱ', 'ا').replace('إ', 'ا').replace('أ', 'ا') in RELATIVE_PRONOUNS:
-        counts['ARTICLE_EXCEPTION_RELATIVE'] += 1     # الذي: اسم موصول، لا «ال» تعريف
-        return text
     def repl(m):
         prefix, alif, alif_marks, nxt = m.group(1), m.group(2), m.group(3), m.group(4)
         if not prefix and not alif:           # لَن: ليست «ال»

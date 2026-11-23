@@ -4,7 +4,6 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import check_licensed as cl
 from dagger_normalize import normalize
-from collections import Counter
 
 VOW = {'a': 'َ', 'u': 'ُ', 'i': 'ِ'}
 LONG = {'aa': ('َ', 'ا'), 'uu': ('ُ', 'و'), 'ii': ('ِ', 'ي')}
@@ -18,12 +17,11 @@ def _render_nuc(nuc):
     return VOW.get(nuc, '')
 
 
-def syllables(word, tags=None):
+def syllables(word):
     """→ (المقاطع المرسومة، الأشكال، المخالفات) أو None للفظ الجلالة/المقطعات."""
     if cl.is_divine(word) or cl.is_constant(word):
         return None
-    tags = Counter() if tags is None else tags
-    norm = normalize(word, tags, mushaf=True)
+    norm = normalize(word, mushaf=True)
     toks = cl.tokens(norm)
     # نعيد التقطيع مع الأشكال وبيانات كل مقطع
     sy, bad = [], []

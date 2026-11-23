@@ -35,31 +35,29 @@ def main(argv):
     stats = Counter()
     for sura, ayah, text in rows:
         for word in join_split_maqsura(text.split()):
-            tags = Counter()
-            res = syllables(word, tags)
+            res = syllables(word)
             if res is None:
                 stats['skipped'] += 1
-                syl_rows.append([sura, ayah, word, word, '', '', 'لا يُقطَّع', ''])
+                syl_rows.append([sura, ayah, word, '', '', 'لا يُقطَّع'])
                 continue
             parts, shapes, bad, norm = res
-            tag_text = ' ; '.join(f'{k}={v}' for k, v in sorted(tags.items()))
             n, _, problems = check(word)
             stats['words'] += 1
             if problems:
                 stats['fail'] += 1
-                fail_rows.append([sura, ayah, word, norm, ' | '.join(problems), tag_text])
+                fail_rows.append([sura, ayah, word, norm, ' | '.join(problems)])
             else:
                 stats['pass'] += 1
             syl_rows.append([sura, ayah, word, norm, ' . '.join(parts),
-                             ' . '.join(shapes) + (' | بقايا' if bad else ''), tag_text])
+                             ' . '.join(shapes) + (' | بقايا' if bad else '')])
 
     with open(os.path.join(out_dir, 'quran_syllables.tsv'), 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, delimiter='\t')
-        w.writerow(['سورة', 'آية', 'الرسم المكتوب', 'النطق المشتق', 'المقاطع', 'الأشكال', 'القواعد المطبَّقة'])
+        w.writerow(['سورة', 'آية', 'الكلمة', 'بعد التوحيد', 'المقاطع', 'الأشكال'])
         w.writerows(syl_rows)
     with open(os.path.join(out_dir, 'quran_failures.tsv'), 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, delimiter='\t')
-        w.writerow(['سورة', 'آية', 'الرسم المكتوب', 'النطق المشتق', 'أسباب الفشل', 'القواعد المطبَّقة'])
+        w.writerow(['سورة', 'آية', 'الكلمة', 'بعد التوحيد', 'أسباب الفشل'])
         w.writerows(fail_rows)
 
     total = stats['words']
