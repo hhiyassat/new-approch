@@ -4,7 +4,7 @@ S = {CV, CVV, CVC, CVVC, CVCC, CVVCC}؛ CVCC/CVVCC آخر الكلمة فقط.
 """
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from dagger_normalize import normalize, SOLAR, end_tag, is_divine  # noqa
+from dagger_normalize import normalize, SOLAR, end_tag, is_divine, is_constant  # noqa
 from collections import Counter
 
 FATHA, DAMMA, KASRA = 'َ', 'ُ', 'ِ'
@@ -95,7 +95,9 @@ def syllabify(toks):
     for k, s in enumerate(sy):
         shape = 'C' + ('VV' if s['nuc'] in ('aa', 'uu', 'ii') else 'V') + 'C' * len(s['coda'])
         last = k == len(sy) - 1
-        ok = shape in SIX and (last or shape not in ('CVCC', 'CVVCC'))
+        # الشدة المكتوبة (تَ+تْ) ليست إدغاماً: القفل المضعّف مع بدء المقطع التالي مسموح وسط الكلمة
+        geminate = (not last and len(s['coda']) > 0 and k + 1 < len(sy) and sy[k + 1]['onset'] == s['coda'][-1])
+        ok = shape in SIX and (last or shape not in ('CVCC', 'CVVCC') or geminate)
         if not ok:
             why = 'غير مرخص' if shape not in SIX else 'CVCC/CVVCC ليس آخر الكلمة'
             bad.append(f'{shape}:{why}')
@@ -104,7 +106,7 @@ def syllabify(toks):
 
 
 def check(word, mushaf=True):
-    if is_divine(word):
+    if is_divine(word) or is_constant(word):
         return None, [], []          # لفظ الجلالة: لا يُقطَّع ولا يُطبع
     norm = normalize(word, mushaf=mushaf)
     toks = tokens(norm)

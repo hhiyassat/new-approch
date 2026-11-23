@@ -29,7 +29,7 @@ MARK_CLASS = 'ً-ٰٟۖ-ۭ'
 MARK = '[' + MARK_CLASS + ']'
 VOWEL_OR_SUKUN = re.compile('[ً-ْۡ]')   # حركة أو تنوين أو سكون
 
-_PREFIX = '[وفبلك]' + MARK + '*'
+_PREFIX = '(?:[وفبلك]' + MARK + '*|ء' + MARK + '*(?=[ا]))'
 _ARTICLE = re.compile(r'(?<!\S)((?:' + _PREFIX + r'){0,2})([' + ALIF_FORMS + r']?)(' + MARK + r'*)' + LAM + MARK + r'*(.)')
 _HAMZA_ON_ALIF = re.compile('[' + HAMZA_ON_ALIF + ']')
 _CARRIER_DAGGER = re.compile('[' + CARRIERS + ']([ً-ٟ]*)' + DAGGER)
@@ -80,6 +80,10 @@ def normalize_silent_waw_alif(text, counts=None):
     """ألف واو الجماعة في آخر الكلمة (كَفَرُواْ، خَلَوۡاْ): الألف صامتة فتُحذف."""
     if counts is None:
         counts = Counter()
+    m0 = re.search('\u0648\u0670([' + MARK_CLASS + ']*)\u0627([' + MARK_CLASS + ']*)$', text)
+    if m0:
+        counts['WAW_DAGGER_SILENT_ALIF_END'] += 1
+        return text[:m0.start()] + ALIF
     m = re.search('\u0648([' + MARK_CLASS + ']*)\u0627([' + MARK_CLASS + ']*)$', text)
     if m:
         counts['SILENT_WAW_ALIF_DELETED'] += 1
@@ -105,15 +109,22 @@ def normalize_dagger_alif(text, counts=None):
 
     def on_carrier(m):
         j = m.start() - 1
-        after_sukun = False
+        after_sukun = after_long = False
         while j >= 0 and re.match(MARK, m.string[j]):
             if m.string[j] == SUKUN:
                 after_sukun = True
+            if m.string[j] == DAGGER:
+                after_long = True            # قبلها مدّ بخنجرية (مَٰ): الواو صامتة بعد مدّ
             j -= 1
-        if m.group(0)[0] == '\u0648' and after_sukun:
-            # واو بعد سكون ينطق صامتاً (أَزۡوَٰجࣱ = ءَزْواَجُ): تبقى، وتُكتب الألف بعدها
+        k = m.end()
+        while k < len(m.string) and re.match(MARK, m.string[k]):
+            k += 1
+        followed_by_taa = k < len(m.string) and m.string[k] == '\u0629'   # ـوٰة: الواو صامتة
+        if m.group(0)[0] == '\u0648' and not followed_by_taa:
+            # واو مع خنجرية (صَوٰعِقِ، سَمَٰوَٰتࣲ، أَزۡوَٰجࣱ) صامتة تبقى؛ الألف بلا حركة
+            # واو بعد سكون أو بعد مدّ تنطق صامتاً (أَزۡوَٰجࣱ = ءَزْواَجُ، سَمَٰوَٰتࣲ = سَمَاوَاتِ)
             counts['DAGGER_WAW_CONSONANT_KEPT'] += 1
-            return '\u0648' + ALIF + m.group(1)
+            return '\u0648' + (m.group(1) or FATHA) + ALIF
         counts['DAGGER_ON_CARRIER_DELETED'] += 1
         return ALIF + m.group(1)
 
@@ -162,8 +173,8 @@ def normalize_sukun(text, counts=None):
             out.append(base + marks)
         elif VOWEL_OR_SUKUN.search(marks):
             out.append(base + marks)
-        elif base in ('\u0648', '\u064A') and marks == '' and next_is_alif:
-            out.append(base + marks)            # واو/ياء صامتة قبل ألف المدّ (وَا)
+        elif marks == '' and next_is_alif:                       # صامت قبل ألف المدّ يأخذ فتحة (مَجْرَاهَا)
+            out.append(base + FATHA)            # واو/ياء صامتة قبل ألف المدّ (وَا)
         elif base == '\u0648' and prev_vowel == DAMMA:
             out.append(base + marks)            # واو المدّ
         elif base == '\u064A' and prev_vowel == KASRA:
@@ -265,6 +276,28 @@ def normalize_madda_alif(text, counts=None):
 def normalize_quran_marks(text, counts=None):
     if counts is None:
         counts = Counter()
+    # لام ساكنة في أول الكلمة (لام الأمر): تصير مكسورة، وتصير مفتوحة قبل مقعد الهمزة (لَأَيْكَةِ)
+    def _initial_lam(m):
+        counts['INITIAL_LAM_VOWEL'] += 1
+        return 'ل' + ('\u064E' if m.group(1) else '\u0650')
+    text = re.sub('(?<!\\S)ل[\u06E1\u0652](\u0640)?', lambda m: _initial_lam(m) + (m.group(1) or ''), text)
+    # إدغام ت/د: إذا كان الأول ساكناً (بسكون صريح) وبعده ت/د مشددة، يُدغم الأول في الثاني
+    def _idgham(m):
+        a, b = m.group(1), m.group(2)
+        if a == b:
+            return m.group(0)
+        counts['IDGHAM_SUKUN_CLOSE'] += 1
+        return b
+    text = re.sub('([تد])[\u06E1\u0652]([تد])(?=[' + MARK_CLASS + ']*\u0651)', _idgham, text)
+    # الدال/التاء الساكنة بلا علامة (أَرَدتُّمۡ) تُدغم في المشدّدة بعدها
+    def _idgham_bare(m):
+        a, b = m.group(1), m.group(2)
+        if a == b:
+            return m.group(0)
+        counts['IDGHAM_BARE_CLOSE'] += 1
+        return b
+    text = re.sub('([تد])(?![' + MARK_CLASS + '])([تد])(?=[' + MARK_CLASS + ']*\u0651)', _idgham_bare, text)
+    text = text.replace('\u0622', '\u0627')            # آ → ا (تُحذف المدّة)
     text = normalize_madda_alif(text, counts)
     text = normalize_hamza_seat(text, counts)
     if _WAQF.search(text):
@@ -282,6 +315,9 @@ def normalize_quran_marks(text, counts=None):
         counts['QURAN_MARK_DELETED'] += n
     text = _DELETE.sub('', text)
     text = text.replace(SMALL_SUKUN, SUKUN)
+    text = re.sub('([^\\s' + MARK_CLASS + '])\u0652?(?=\\1[' + MARK_CLASS + ']*\u0651)', '', text)
+    text = re.sub('([^\\s' + MARK_CLASS + '])\u0652(?=\\1\u0652)', '', text)   # ساكن بعده مثله ساكن: يُدغم   # إدغام المتماثلين: ككّ → كّ
+    text = re.sub('\u0627\u0652(?=\u0626|\u064A[' + MARK_CLASS + ']*[\u0621\u0654])', '', text)   # مِاْئَةَ → مِئَةَ: الألف الساكنة قبل الهمزة تُحذف
     for k, v in OPEN_TANWIN.items():
         text = text.replace(k, v)
     return text
@@ -324,7 +360,17 @@ def normalize_tanwin(text, counts=None):
     return text
 
 
-_DIVINE_SKELETON = re.compile(r'^[وفبلك]{0,2}[اٱإأ]?لل[ه]$')
+_DIVINE_SKELETON = re.compile(r'^[وفبلكت]{0,2}[ءاٱإأآ]{0,2}لل[ه]$')
+
+
+# الحروف المقطعة في أوائل السور: ثوابت لا تُقطَّع ولا تُطبع
+MUQATTAAT = {'حم', 'طسم', 'الم', 'الر', 'المر', 'المص', 'كهيعص', 'طه', 'يس', 'طس',
+             'ص', 'ق', 'ن', 'عسق'}
+
+
+def is_constant(word):
+    skel = re.sub('[' + MARK_CLASS + '\u0640\u200F]', '', word)
+    return skel in MUQATTAAT
 
 
 def is_divine(word):
@@ -348,11 +394,34 @@ def join_split_maqsura(words, counts=None):
     return out
 
 
+_IDGHAM_CLOSE = re.compile('([تد])[\u064E\u064F\u0650\u0652]?([تد])([\u064B-\u0652\u0670]*)')
+
+
+def _idgham_close(text, counts=None):
+    """إدغام المتقاربين ت/د في المصحف: إذا شُدّد الحرف الثاني بعد الآخر المختلف،
+    يصير الأول ساكناً والثاني حرفاً واحداً بحركته (أَرَدتُّمۡ → ءَرَدْتُمْ).
+    المتماثل (تَتَّقُونَ) لا يدخل هنا، لأن شدته حقيقية."""
+    if counts is None:
+        counts = Counter()
+
+    def repl(m):
+        a, b, marks = m.group(1), m.group(2), m.group(3)
+        if a == b or '\u0651' not in marks:
+            return m.group(0)
+        counts['IDGHAM_CLOSE_LETTERS'] += 1
+        return a + SUKUN + b + marks.replace(SHADDA, '')
+
+    return _IDGHAM_CLOSE.sub(repl, text)
+
+
 def normalize(text, counts=None, mushaf=False):
     if counts is None:
         counts = Counter()
     if is_divine(text):
         counts['DIVINE_NAME_SKIPPED'] += 1
+        return None
+    if is_constant(text):
+        counts['MUQATTAAT_SKIPPED'] += 1
         return None
     text = normalize_quran_marks(text, counts)
     text = normalize_article(text, counts)
@@ -361,6 +430,8 @@ def normalize(text, counts=None, mushaf=False):
     text = normalize_silent_waw_alif(text, counts)
     text = normalize_hamza_on_alif(text, counts)
     text = normalize_dagger_alif(text, counts)
+    if mushaf:
+        pass   # إدغام المتقاربين ت/د: ملغى (تُكتب الشدة كما هي)
     text = split_shadda(text, counts, mushaf=mushaf)
     text = normalize_sukun(text, counts)
     return normalize_tanwin(text, counts)
@@ -377,6 +448,11 @@ if __name__ == '__main__':
         'ذَٰلِكَ': 'ذَالِكَ',
         'عَلَى': 'عَلَى',
         'يَٰأَيُّهَا': 'يَاءَيْيُهَا',
+        'سَمَٰوَٰتࣲ': 'سَمَاوَاتِ',
+        'صَلَوٰةَ': 'صَلَاةَ',
+        'أَزۡوَٰجࣱ': 'ءَزْوَاجُ',
+        'ٱلصَّوَٰعِقِ': 'ءَصْصَوَاعِقِ',
+        'مِاْئَةَ': 'مِئَةَ',
         'مَدَّ': 'مَدْدَ',
         'رَبٌّ': 'رَبْبُ',
         'إِنَّ': 'ءِنْنَ',
