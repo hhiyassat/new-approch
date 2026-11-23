@@ -189,7 +189,9 @@ def syllabify(cells):
         shape = 'C' + ('VV' if s['nuc'] == 'VV' else 'V') + 'C' * len(s['coda'])
         last = k == len(sy) - 1
         nxt_onset = sy[k + 1]['onset'] if not last else None
-        geminate = bool(s['coda']) and nxt_onset is not None and cells[nxt_onset].carrier == cells[s['coda'][-1]].carrier
+        # الاستثناء: نصف الشدة المكتوبة وحده قفل، بعده الصامت التالي نفسه؛ لا قفل قبله
+        geminate = (len(s['coda']) == 1 and nxt_onset is not None
+                    and cells[nxt_onset].carrier == cells[s['coda'][-1]].carrier)
         ok_shape = shape in SIX
         ok_final = last or shape not in FINAL_ONLY or geminate
         span = (cells[cell_ids[0]].span[0], cells[cell_ids[-1]].span[1])

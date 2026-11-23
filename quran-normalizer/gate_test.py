@@ -38,6 +38,12 @@ def test_negative_medial_cvcc_rejected():
     assert r['status'] == 'REJECTED', r
 
 
+def test_triple_consonant_rejected():
+    # ٱلنَّاسِ: ل ن ّ تعطي ثلاثة صوامت متتالية وسط الكلمة، فلا تُقبل كـ CVCC
+    r = decide('ٱلنَّاسِ')
+    assert r['status'] == 'REJECTED', r
+
+
 def test_wasla_kept_and_inference_tagged():
     cells = build_cells('ٱلنَّاسِ')
     assert cells[0].span == (0, 1) and 'INFERRED_VOWEL' in cells[0].flags
