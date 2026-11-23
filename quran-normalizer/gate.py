@@ -59,7 +59,11 @@ class Cell:
 def build_cells(word):
     """النص المكتوب → خلايا. يرفع خطأ على أي رمز غير معروف (لا تخمين)."""
     cells, i, n = [], 0, len(word)
+    elided = _solar_elision(word)
     while i < n:
+        if elided and elided[0] <= i < elided[1]:
+            i = elided[1]
+            continue
         ch = word[i]
         if ch in MADD_OF and i + 1 <= n:
             # واو/ياء بلا حركة بعد الحركة المطابقة = مدّ
@@ -114,10 +118,33 @@ def build_cells(word):
             i = j
             continue
         raise ValueError(f'رمز غير مدعوم {ch!r} عند {i} في {word!r}')
+    if elided and cells:
+        cells[0].flags.append('SOLAR_LAM_ELIDED')
     for c in cells:
         if c.carrier == 'ء' and c.vowel is None and not c.sukun:
             c.flags.append('UNMARKED')
     return cells
+
+
+SOLAR = set('تثدذرزسشصضطظلن')
+RELATIVE = {'الذي', 'الذين', 'التي', 'اللذان', 'اللذين', 'اللتان', 'اللتين',
+            'اللاتي', 'اللواتي', 'اللائي', 'الذا', 'الذى'}
+
+
+def _is_relative(word):
+    skel = ''.join(c for c in word if c not in MARKCHARS and c != '\u0640')
+    return skel.replace('ٱ', 'ا') in RELATIVE
+
+
+def _solar_elision(word):
+    """ال قبل حرف شمسي: تُحذف اللام، ويُوسم ذلك استنتاجاً. الاسم الموصول مستثنى."""
+    if len(word) > 1 and word[0] in (WASLA, ALIF) and word[1] == 'ل' and not _is_relative(word):
+        j = 2
+        while j < len(word) and word[j] in MARKCHARS:
+            j += 1
+        if j < len(word) and word[j] in SOLAR:
+            return (1, j)
+    return None
 
 
 def _marks_after(word, j):

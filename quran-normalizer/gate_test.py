@@ -38,10 +38,16 @@ def test_negative_medial_cvcc_rejected():
     assert r['status'] == 'REJECTED', r
 
 
-def test_triple_consonant_rejected():
-    # ٱلنَّاسِ: ل ن ّ تعطي ثلاثة صوامت متتالية وسط الكلمة، فلا تُقبل كـ CVCC
+def test_solar_article_elided_and_tagged():
+    # ٱلنَّاسِ: اللام الشمسية تُحذف (إدغام)، والشدة تصبح بدءاً للمقطع التالي
     r = decide('ٱلنَّاسِ')
-    assert r['status'] == 'REJECTED', r
+    assert [s[0] for s in r['syllables']] == ['CVC', 'CVV', 'CV'], r
+    assert 'SOLAR_LAM_ELIDED' in build_cells('ٱلنَّاسِ')[0].flags
+
+
+def test_relative_keeps_lam():
+    cells = build_cells('ٱلَّذِي')
+    assert 'SOLAR_LAM_ELIDED' not in cells[0].flags and len(cells) == 4
 
 
 def test_wasla_kept_and_inference_tagged():
