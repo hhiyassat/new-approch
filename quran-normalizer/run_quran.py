@@ -63,7 +63,7 @@ def main(argv):
     total = stats['words']
     pct = 100.0 * stats['pass'] / total if total else 0.0
     print(f"الكلمات المفحوصة: {total}")
-    print(f"المتخطاة (لفظ الجلالة والحروف المقطعة): {stats['skipped']}")
+    print(f"المتخطاة (لفظ الجلالة): {stats['skipped']}")
     print(f"نجحت: {stats['pass']}  ({pct:.2f}%)")
     print(f"فشلت: {stats['fail']}")
     print(f"الملفات: {os.path.abspath(out_dir)}")

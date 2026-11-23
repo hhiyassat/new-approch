@@ -365,10 +365,11 @@ def join_split_maqsura(words, counts=None):
 
 
 def normalize(text, counts=None, mushaf=False):
-    """يعيد النص الموحَّد. لا تُستثنى أي كلمة."""
+    """يعيد النص الموحَّد، أو None للفظ الجلالة (مستثنى). الحروف المقطعة لا تُستثنى."""
     counts = Counter() if counts is None else counts
     if is_divine(text):
-        counts['DIVINE_NAME'] += 1          # لا تُستثنى: تُطبَّع وتُقطَّع مثل غيرها
+        counts['DIVINE_NAME_SKIPPED'] += 1  # لفظ الجلالة: لا يُطبَّع ولا يُقطَّع
+        return None
     if is_constant(text):
         counts['MUQATTAAT'] += 1            # لا تُستثنى: تُطبَّع وتُقطَّع مثل غيرها
     text = normalize_quran_marks(text, counts)

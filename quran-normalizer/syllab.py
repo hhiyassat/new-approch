@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import check_licensed as cl
-from dagger_normalize import normalize
+from dagger_normalize import normalize, is_divine
 
 VOW = {'a': 'َ', 'u': 'ُ', 'i': 'ِ'}
 LONG = {'aa': ('َ', 'ا'), 'uu': ('ُ', 'و'), 'ii': ('ِ', 'ي')}
@@ -19,6 +19,8 @@ def _render_nuc(nuc):
 
 def syllables(word):
     """→ (المقاطع المرسومة، الأشكال، المخالفات) أو None للفظ الجلالة/المقطعات."""
+    if is_divine(word):
+        return None                    # لفظ الجلالة مستثنى
     norm = normalize(word, mushaf=True)
     toks = cl.tokens(norm)
     # نعيد التقطيع مع الأشكال وبيانات كل مقطع
