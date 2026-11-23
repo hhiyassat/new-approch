@@ -19,8 +19,6 @@ def _render_nuc(nuc):
 
 def syllables(word):
     """→ (المقاطع المرسومة، الأشكال، المخالفات) أو None للفظ الجلالة/المقطعات."""
-    if cl.is_divine(word) or cl.is_constant(word):
-        return None
     norm = normalize(word, mushaf=True)
     toks = cl.tokens(norm)
     # نعيد التقطيع مع الأشكال وبيانات كل مقطع

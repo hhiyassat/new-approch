@@ -106,8 +106,7 @@ def syllabify(toks):
 
 
 def check(word, mushaf=True):
-    if is_divine(word) or is_constant(word):
-        return None, [], []          # لفظ الجلالة: لا يُقطَّع ولا يُطبع
+    pass          # لفظ الجلالة: لا يُقطَّع ولا يُطبع
     norm = normalize(word, mushaf=mushaf)
     toks = tokens(norm)
     shapes, bad = syllabify(toks)
