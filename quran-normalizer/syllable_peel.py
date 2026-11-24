@@ -10,6 +10,9 @@
 from gate import build_cells, syllabify, _is_relative
 from peel import _is_silent, _is_pair, _coverage, ABSENT
 
+# حروف الإلحاق المسموح نزعها: ال (ء ل) + سألتمونيها (س ا ل ت م و ن ي ه) + المضارعة (ء ن ي ت).
+# كل حرف خارج هذه المجموعة من أحرف الجذر، ولا يجوز أن يدخل جزء مُزال.
+AFFIX_LETTERS = set('ءلساتمونيه')
 PROCLITIC = set('وفبلك')
 VERB_PREFIX = set('ءنيت')
 SUFFIX_FORMS = ('هما', 'هم', 'هن', 'ها', 'كم', 'كن', 'نا', 'ني', 'ه', 'ك')
@@ -35,6 +38,9 @@ def _morph(word, cells, detached, side):
             if any(_is_silent(c) for c in detached):
                 return 'PENDING', 'ٱ صامتة بعد حركة السابقة: الحسم معلّق بقرار التقطيع'
             return 'LICENSED', 'ال المكتوبة (ٱ + ل)'
+    roots = [c.carrier for c in detached if c.carrier not in AFFIX_LETTERS]
+    if roots:
+        return 'REJECTED', 'ROOT_LETTER_IN_DETACHED: أحرف جذرية في الجزء المزال: ' + ' '.join(roots)
     if len(detached) == 1 and side == 'left' and first.vowel and first.carrier in PROCLITIC:
         return 'PENDING', 'سابقة مفردة: الحرف قد يكون أصلًا في الجذر'
     if len(detached) == 1 and side == 'left' and first.vowel and first.carrier in VERB_PREFIX:
@@ -85,6 +91,8 @@ def propose(word):
                                else _morph(word, cells, detached, side))
             if geo != 'OK':
                 final = 'REJECTED'
+            elif morph == 'REJECTED':
+                final = 'REJECTED'
             else:
                 final = morph
             out.append(dict(
@@ -99,7 +107,7 @@ def propose(word):
                 detached_text=word[detached[0].span[0]:detached[-1].span[1]] if detached else '',
                 geometry_verdict=geo, geometry_reason=reason,
                 morphology_evidence=evidence, host_integrity=geo == 'OK' and bool(residual),
-                final_verdict=final, reason=reason if geo != 'OK' else evidence,
+                final_verdict=final, reason=reason if geo != 'OK' else (evidence if final != 'REJECTED' or evidence.startswith('ROOT') else evidence),
                 parent_analysis_id=ABSENT))
     return dict(word=word, status='OK', candidates=out, coverage=cov_exc)
 

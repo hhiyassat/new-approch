@@ -45,6 +45,19 @@ def test_positional_sides_for_right_candidate():
     assert c['left_syllables'] == ['CVC', 'CV', 'CV'] and c['right_syllables'] == ['CV']
 
 
+def test_root_letters_block_detachment():
+    # رَيۡبَۛ: ر وب ليستا من أحرف الإلحاق، فلا يُزال أي جزء منها
+    res = _cands('رَيۡبَۛ')
+    assert res and all(c['final_verdict'] == 'REJECTED' for c in res)
+    assert all('ROOT_LETTER_IN_DETACHED' in c['reason'] for c in res)
+
+
+def test_affix_only_detachment_still_pending():
+    # هُ من أحرف سألتمونيها: تبقى PENDING لا REJECTED
+    c = [c for c in _cands('نَكْتُبُهُ') if c['detached_text'] == 'هُ'][0]
+    assert c['final_verdict'] == 'PENDING'
+
+
 def test_article_rule_only_for_exact_unit():
     # ٱلۡكِ ليست وحدة ال: لا ترخيص لها بالتعريف
     c = [c for c in _cands('ٱلۡكِتَٰبُ') if c['detached_text'] == 'ٱلۡكِ'][0]
