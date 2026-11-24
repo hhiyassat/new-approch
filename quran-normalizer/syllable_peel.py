@@ -53,6 +53,19 @@ def propose(word):
     groups = [[cells[i] for i in s['cells']] for s in sylls]
     cov_ok, cov_exc = _coverage(word, cells)
     out = []
+    out = []
+    # ال الشمسية: ٱ داخل مقطع ءَنْ، فلا حد مقطعي يفصلها. تُسجَّل PENDING بالسبب، دون استثناء.
+    if cells and cells[0].carrier == 'ء' and 'SOLAR_LAM_ELIDED' in cells[0].flags:
+        out.append(dict(
+            candidate_id=f'{word}#article@solar', side='left', boundary_cell=None,
+            source_cells=[cells[0].idx], left_syllables=[], right_syllables=[],
+            detached_text=word[cells[0].span[0]:cells[0].span[1]],
+            geometry_verdict='NO_SYLLABLE_BOUNDARY', geometry_reason='ٱ داخل مقطع ءَنْ',
+            morphology_evidence='ال شمسية: اللام محذوفة وتحويلها مسجّل',
+            host_integrity=False, final_verdict='PENDING',
+            reason='MORPHOLOGICAL_BOUNDARY_INSIDE_SYLLABLE', parent_analysis_id=ABSENT))
+    groups = [[cells[i] for i in s['cells']] for s in sylls]
+    cov_ok, cov_exc = _coverage(word, cells)
     # الحدود: بين كل مقطعين متتاليين فقط
     for k in range(len(groups) - 1):
         cut = groups[k + 1][0].idx

@@ -44,6 +44,13 @@ def main(argv):
     sura = None
     if '--sura' in args:
         i = args.index('--sura'); sura = args[i + 1]; del args[i:i + 2]
+    method = 'peel'                     # الافتراضي: المسار القديم بالحروف، للمقارنة
+    if '--method' in args:
+        i = args.index('--method'); method = args[i + 1]; del args[i:i + 2]
+    if method not in ('peel', 'syllable'):
+        print('method must be peel or syllable'); return 2
+    if method == 'syllable':
+        import syllable_peel as SP
     if len(args) != 2:
         print(__doc__); return 2
     src, out_dir = args
@@ -62,6 +69,20 @@ def main(argv):
                 occ = f'{s}:{ayah}:{pos}'
                 if is_divine(word):
                     stats['divine_skipped'] += 1
+                    continue
+                if method == 'syllable':
+                    try:
+                        sp = SP.propose(word)
+                    except ValueError as e:
+                        stats['cells_error'] += 1
+                        continue
+                    for c in sp['candidates']:
+                        stats[c['final_verdict']] += 1
+                        rows.append([s, ayah, pos, occ, word, 'SYLLABLE', c['final_verdict'], c['reason'],
+                                     c['candidate_id'], c['side'], c['detached_text'], c['geometry_verdict'],
+                                     ' '.join(c['left_syllables']), ' '.join(c['right_syllables'])] + [''] * 3)
+                    if not sp['candidates']:
+                        stats['no_candidate'] += 1
                     continue
                 try:
                     cells = build_cells(word)
