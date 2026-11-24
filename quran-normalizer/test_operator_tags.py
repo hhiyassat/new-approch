@@ -105,7 +105,7 @@ def test_operand_identity_cells_are_present():
 def test_quranic_small_sukun_counts_as_sukun():
     # «مِنۡ» بالسكون الصغير القرآني تطابق «مِنْ» بالشكل
     assert T.vsig('مِنۡ') == T.vsig('مِنْ')
-    assert [t for t in T.tags_for_word('مِنۡ') if t[0] == 'عامل' and t[8] == 'WORD_OPERATOR_VOCALIZED']
+    assert [t for t in T.tags_for_word('مِنۡ') if t[0] == 'عامل' and t[3] == 'WORD_OPERATOR_VOCALIZED']
 
 
 def test_non_operator_has_no_tag():
