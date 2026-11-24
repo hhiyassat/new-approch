@@ -31,12 +31,20 @@ def starts_with_article(w):
     return False
 
 
+TANWIN = re.compile('[\u064B-\u064D\u08F0-\u08F2]')
+
+
+def has_tanwin(w):
+    """التنوين علامة اسمية. يُفحص على الكلمة الخام قبل تحويله إلى حركة."""
+    return bool(TANWIN.search(w or ''))
+
+
 def tag_nouns(words):
     """قائمة كلمات ← قائمة أوسمة: 'اسم' أو ''."""
     tags = []
     for i, w in enumerate(words):
         prev = bare(words[i - 1]) if i > 0 else ''
-        if starts_with_article(w) or (prev and prev in JARR):
+        if has_tanwin(w) or starts_with_article(w) or (prev and prev in JARR):
             tags.append('اسم')
         else:
             tags.append('')
@@ -59,6 +67,9 @@ if __name__ == '__main__':
         (['وَٱلَّذِينَ'], ['اسم']),
         (['لِيَقۡطَعۡ'], ['']),
         (['بِيَدِهِ'], ['']),
+        (['نَارࣰ'], ['اسم']),
+        (['كِتَابٌ'], ['اسم']),
+        (['يَعۡمَلُ'], ['']),
     ]
     bad = 0
     for ws, want in tests:
