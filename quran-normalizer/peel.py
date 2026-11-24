@@ -242,13 +242,14 @@ def _evaluate(word, cells, rule_id, parts, cov_ok, cov_exc, source):
         removed_ok = all(set(c.carrier for c in cells[s:e]) <= ALLOWED_REMOVED.get(r, set())
                          for r, s, e in _spans_of(parts) if r != 'HOST')
         sukun = _internal_sukun(cells[p:], all_ids[p:], word) if right['valid'] else []
+        touching = [s for s in sukun if s['origin'] == 'UNKNOWN' and s['cell_id'] in (p - 1, p, p + 1)]
         cut_ok = left['valid'] and right['valid'] and not pair_cut and cov_ok
         if pair_cut:
             fails.append('شدة مقطوعة عبر الحد، والفصل عبرها غير مرخّص')
         if not left['valid']:
-            fails.append('الجزء المفصول معيب: ' + left['reason'])
+            fails.append('الطرف الأيسر معيب: ' + left['reason'])
         if not right['valid']:
-            fails.append('البقية معيبة: ' + right['reason'])
+            fails.append('الطرف الأيمن معيب: ' + right['reason'])
         if not cov_ok:
             fails.append('تغطية المصدر ناقصة (حرف غير معلّل)')
         bchecks.append(dict(
@@ -261,6 +262,7 @@ def _evaluate(word, cells, rule_id, parts, cov_ok, cov_exc, source):
             source_coverage_valid=cov_ok,
             shadda_origin=origin,
             internal_sukun_origin=sukun,
+            unknown_sukun_touching_cut=touching,
             host_integrity=right['valid'] and removed_ok and not pair_cut,
             boundary_license=cut_ok and removed_ok,
         ))
@@ -268,7 +270,7 @@ def _evaluate(word, cells, rule_id, parts, cov_ok, cov_exc, source):
             fails.append('يُنزع حرف لا ينتمي إلى السابقة المرخّصة')
 
     rule = RULES[rule_id]
-    unknown_sukun = [s for b in bchecks for s in b.get('internal_sukun_origin', []) if s['origin'] == 'UNKNOWN']
+    unknown_sukun = [s for b in bchecks for s in b.get('unknown_sukun_touching_cut', [])]
     lex = [e for k, e in _LEX_KEYS if k == _key(word)]
     art_parts = [idxs for role, idxs in parts if role == 'ART']
     art_start = cells[art_parts[0][0]].span[0] if art_parts else 0
