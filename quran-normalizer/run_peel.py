@@ -80,7 +80,7 @@ def main(argv):
                         stats[c['final_verdict']] += 1
                         rows.append([s, ayah, pos, occ, word, 'SYLLABLE', c['final_verdict'], c['reason'],
                                      c['candidate_id'], c['side'], c['detached_text'], c['geometry_verdict'],
-                                     ' '.join(c['left_syllables']), ' '.join(c['right_syllables'])] + [''] * 3)
+                                     ' '.join(c['left_syllables']), ' '.join(c['right_syllables'])])
                     if not sp['candidates']:
                         stats['no_candidate'] += 1
                     continue
@@ -102,11 +102,14 @@ def main(argv):
                     stats[f"{a['rule']['rule_id']}:{a['verdict']}"] += 1
                     rows.append([s, ayah, pos, occ, word, a['rule']['rule_id'], a['verdict'], a['reason'],
                                  _cuts(a), _units_text(a)] + _evidence(a))
+    header = (['سورة', 'آية', 'ترتيب_الكلمة_في_الآية', 'معرف_الوقوع', 'الكلمة', 'القاعدة', 'الحكم', 'السبب',
+               'الحدود', 'الوحدات', 'مقاطع_الطرف_الأيسر_للحد', 'مقاطع_الطرف_الأيمن_للحد', 'أصل_الشدة',
+               'أصل_الساكن_الداخلي', 'تغطية_المصدر_الاستثناءات'] if method == 'peel' else
+              ['سورة', 'آية', 'ترتيب_الكلمة_في_الآية', 'معرف_الوقوع', 'الكلمة', 'المسار', 'الحكم', 'السبب',
+               'معرف_المرشح', 'الجانب', 'الجزء_المفصول', 'الهندسة', 'مقاطع_اليسار', 'مقاطع_اليمين'])
     with open(os.path.join(out_dir, 'peel_words.tsv'), 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, delimiter='\t')
-        w.writerow(['سورة', 'آية', 'ترتيب_الكلمة_في_الآية', 'معرف_الوقوع', 'الكلمة', 'القاعدة', 'الحكم', 'السبب',
-                    'الحدود', 'الوحدات', 'مقاطع_الطرف_الأيسر_للحد', 'مقاطع_الطرف_الأيمن_للحد', 'أصل_الشدة', 'أصل_الساكن_الداخلي',
-                    'تغطية_المصدر_الاستثناءات'])
+        w.writerow(header)
         w.writerows(rows)
     lines = [f"{k}: {v}" for k, v in sorted(stats.items())]
     with open(os.path.join(out_dir, 'peel_summary.txt'), 'w', encoding='utf-8') as f:
