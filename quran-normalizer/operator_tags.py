@@ -99,6 +99,60 @@ GENERAL_JARR_PROCLITICS = {'ب', 'ل', 'ك'}
 PROCLITIC = {o['skeleton']: o for o in OPS if o['skeleton'] in GENERAL_JARR_PROCLITICS and 'جر' in o['cases']}
 
 
+
+# ---------------------------------------------------------------- المطابقة بالشكل (الكتالوج المشكول)
+import csv as _csv
+_HARAKAT = set('\u064B\u064C\u064D\u064E\u064F\u0650\u0651\u0652')
+
+
+def vsig(text):
+    """توقيع مشكول: كل حرف أساسي مع حركاته، بلا حركة الحرف الأخير (الإعراب الآخِر يتغير بالوقف)."""
+    units = []
+    for ch in text:
+        if ch in _HARAKAT:
+            if units:
+                units[-1] = units[-1] + ch
+        elif ch in (TATWEEL, '\u200f') or ch.isspace() or ch in set(WAQF) or ch in set(NON_PHONETIC):
+            continue
+        else:
+            units.append({'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ٱ': 'ا'}.get(ch, ch))
+    if units:
+        base = ''.join(ch for ch in units[-1] if ch not in _HARAKAT)
+        units[-1] = base
+    return tuple(units)
+
+
+def _cases_from_note(note):
+    cases = []
+    for name, stems in (('جر', ('مجرور', 'حرف جر', 'جر ')), ('نصب', ('منصوب',)), ('رفع', ('مرفوع',)), ('جزم', ('مجزوم', 'جازم'))):
+        pos = [note.find(st) for st in stems if st in note]
+        if pos:
+            cases.append((min(p for p in pos if p >= 0), name))
+    return [n for _, n in sorted(cases)]
+
+
+def _load_vocalized_catalog():
+    import os
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'operators', 'operators_catalog_split_vocalized.csv')
+    table = {}
+    if not os.path.exists(path):
+        return table
+    for r in _csv.DictReader(open(path, encoding='utf-8-sig')):
+        op = (r.get('Operator') or '').strip()
+        if not op:
+            continue
+        key = vsig(op)
+        table.setdefault(key, []).append(dict(
+            operator=op, purpose=(r.get('Purpose/Usage') or '').strip(),
+            group=(r.get('Arabic Group Name') or '').strip(),
+            cases=_cases_from_note(r.get('Note') or ''), note=(r.get('Note') or '').strip()))
+    return table
+
+
+VOCAL = _load_vocalized_catalog()
+SKEL_KNOWN = {skeleton(o['plain']) for o in OPS if o.get('plain')}
+
+
 def _unit_boundary(word):
     """حدّ الوحدة: الحرف الأول مقطع CV مستقل (لا CVV ولا ملتحم).
     → (مُثبت؟، الحالة). لا يُرشَّح أي عامل قبل إثبات هذا الحد."""
@@ -118,6 +172,32 @@ def _unit_boundary(word):
     return False, 'FIRST_SYLLABLE_' + shape, shape
 
 
+
+_BUILT = None
+
+
+def _built_skeletons():
+    """هياكل المداخل المبنية الصالحة (من المعجم المنظّف). لا تُستعمل إلا بادئةً طويلة."""
+    global _BUILT
+    if _BUILT is None:
+        import csv, os
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lexicon', 'mabniyat.tsv')
+        _BUILT = set()
+        if os.path.exists(path):
+            for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t'):
+                if r.get('skeleton') and len(r['skeleton']) >= 2:
+                    _BUILT.add(r['skeleton'])
+    return _BUILT
+
+
+def _built_prefix(sk):
+    return any(sk.startswith(b) and len(b) < len(sk) for b in _built_skeletons())
+
+
+def _root_exclusion_proven(word):
+    """استبعاد كون الحرف الأول أصليًا يحتاج مورد جذور؛ لا يوجد مورد كهذا في المستودع بعد."""
+    return False, 'NO_ROOT_RESOURCE'
+
 def _is_article_text(text):
     return skeleton(text).startswith('ال')
 
@@ -132,62 +212,53 @@ def _cell_ids(text, start=0):
 
 def tags_for_word(word, next_word=None):
     """→ (الوسم، المعامل، الحالة المتوقعة، الدليل، الطرف المرتبط، حالة_العلاقة، حد_الوحدة، حالة_الوظيفة، خلايا_الطرف).
-    كل وسم مرشح أو مؤجَّل بسبب؛ لا وسم يُحذف بصمت."""
+    الجدول الرئيسي: عوامل الكلمات الكاملة وعلاقتها بالكلمة التالية فقط.
+    السوابق المتصلة تبقى في التشخيص (DIAGNOSTIC_ONLY) مع سبب الحجب."""
     out = []
     sk = skeleton(word)
-    if sk in WHOLE:
-        o = WHOLE[sk]
-        uniq, keys = [], set()
-        for grp in o['sense_groups']:
-            k = (tuple(grp['labels']), tuple(grp['cases']))
-            if k not in keys:
-                keys.add(k); uniq.append(grp)
-        evidence_base = 'WORD_OPERATOR_SKELETON_MATCH'
-        # الشكل يميّز الوظيفة في «من»: الكسرة للجر، والفتحة للشرط (من الكتالوج)
-        try:
-            from gate import build_cells
-            first_vowel = build_cells(word)[0].vowel
-        except (ValueError, IndexError):
-            first_vowel = None
-        if sk == 'من' and first_vowel in ('i', 'a'):
-            if first_vowel == 'i':
-                kept = [g for g in uniq if not any('الشرط' in l for l in g['labels'])]
-            else:
-                kept = [g for g in uniq if any('الشرط' in l for l in g['labels'])]
-            if kept:
-                uniq = kept
-                evidence_base = 'WORD_OPERATOR_SHAPE_DISCRIMINATED'
+    if vsig(word) in VOCAL:
+        rows_v = VOCAL[vsig(word)]
+        evidence_v = 'WORD_OPERATOR_VOCALIZED'
         # قرينة واحدة مؤكدة: «ما» بعدها «إلا» تكون نافية حاصرة، فتُحذف المعاني الأخرى لهذا الوقوع
-        if sk == 'ما' and next_word and skeleton(next_word) in ('الا',):
-            uniq = [g for g in uniq if any('النفي' in l for l in g['labels'])] or uniq
-            evidence_base = 'WORD_OPERATOR_SENSE_NEXT_ILLA'
-        for grp in uniq:
-            case = ' / '.join(grp['cases']) if grp['cases'] else '—'
-            label = o['plain'] + ' (' + ' / '.join(l for l in grp['labels'] if l) + ')' if grp['labels'] and any(grp['labels']) else o['plain']
-            out.append(('عامل', label, case, evidence_base, word, 'CANDIDATE', 'WHOLE_WORD', 'CANDIDATE_CASE', ''))
+        if vsig(word) == vsig('مَا') and next_word and skeleton(next_word) == 'الا':
+            narrowed = [r for r in rows_v if 'نفي' in r['purpose']]
+            if narrowed:
+                rows_v = narrowed
+                evidence_v = 'WORD_OPERATOR_SENSE_NEXT_ILLA'
+        self_ids, _ = _cell_ids(word)
+        uniq = []
+        for r in rows_v:
+            k = (r['purpose'], tuple(r['cases']))
+            if k not in [(u['purpose'], tuple(u['cases'])) for u in uniq]:
+                uniq.append(r)
+        for r in uniq:
+            case = ' / '.join(r['cases']) if r['cases'] else '—'
+            label = r['operator'] + ' (' + r['purpose'] + ')' if r['purpose'] else r['operator']
+            out.append(('عامل', label, case, evidence_v, word, 'CANDIDATE', 'WHOLE_WORD', 'CANDIDATE_CASE', self_ids))
             if next_word:
                 ids, readable = _cell_ids(next_word)
                 rel = 'CANDIDATE' if readable else 'SUSPENDED_OPERAND_UNREADABLE'
                 out.append(('معمول', label, case, 'ADJACENT_AFTER_OPERATOR', next_word, rel, 'NEXT_WORD', 'CANDIDATE_CASE', ids))
         return out
+    if sk in SKEL_KNOWN:
+        # الهيكل يطابق عاملًا لكن الشكل لا يطابق الكتالوج المشكول: لا وسم، بل تشخيص
+        ids, _ = _cell_ids(word)
+        out.append(('عامل', word, '', 'SKELETON_ONLY_NO_VOCALIZED_MATCH', word, 'DIAGNOSTIC_ONLY', 'SHAPE_NOT_IN_CATALOG', 'NOT_EVALUATED', ids))
+        return out
     if sk and sk[0] in PROCLITIC and len(sk) > 1:
         o = PROCLITIC[sk[0]]
         ok, why, shape = _unit_boundary(word)
-        evidence = 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' if sk.endswith('وا') else 'PROCLITIC_OPERATOR'
+        root_ok, root_why = _root_exclusion_proven(word)
         if not ok:
-            # لا تُحذف الوقوعات: تبقى مؤجلة بسبب الحد، مع الطرف الكامل وخلاياه
-            ids, _ = _cell_ids(word)
-            out.append(('عامل', o['plain'], 'جر', 'PROCLITIC_DEFERRED', word, 'DEFERRED', why, 'NOT_EVALUATED', ids))
-            out.append(('معمول', o['plain'], 'جر', 'PROCLITIC_DEFERRED', word, 'DEFERRED', why, 'NOT_EVALUATED', ids))
-            return out
-        try:
-            from gate import build_cells
-            c = build_cells(word)
-        except ValueError:
-            return out
-        operand = word[c[1].span[0]:] if len(c) > 1 else ''
-        operand_ids = ' '.join(str(x.idx) for x in c[1:])
-        func = 'NEXT_ARTICLE_CANDIDATE' if _is_article_text(operand) else 'UNDECIDED'
-        out.append(('عامل', o['plain'], 'جر', evidence, operand, 'CANDIDATE', why, func, operand_ids))
-        out.append(('معمول', o['plain'], 'جر', evidence, operand, 'CANDIDATE', why, func, operand_ids))
+            reason = why
+        elif _built_prefix(sk):
+            reason = 'BUILT_PREFIX_BLOCKS_PROCLITIC'
+        elif not root_ok:
+            reason = root_why
+        else:
+            reason = 'ELIGIBLE_BUT_NOT_TABLED'
+        ids, _ = _cell_ids(word)
+        func = 'UNDECIDED' if ok else 'NOT_EVALUATED'
+        out.append(('عامل', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', word, 'DIAGNOSTIC_ONLY', reason, func, ids))
+        out.append(('معمول', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', word, 'DIAGNOSTIC_ONLY', reason, func, ids))
     return out

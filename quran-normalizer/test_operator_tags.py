@@ -7,13 +7,12 @@ import operator_tags as T
 
 def test_word_operator_with_nasb_rafa():
     tags = T.tags_for_word('إِنَّ', 'ٱلنَّاسِ')
-    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR_SKELETON_MATCH'
+    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR_VOCALIZED'
 
 
-def test_proclitic_jarr_operator_is_candidate_only():
+def test_proclitic_jarr_operator_is_diagnostic_only():
     tags = T.tags_for_word('بِمَآ')
-    assert all(t[5] == 'CANDIDATE' for t in tags)
-    assert tags[0][2] == 'جر' and tags[1][0] == 'معمول'
+    assert tags and all(t[5] == 'DIAGNOSTIC_ONLY' and t[3] == 'PROCLITIC_DIAGNOSTIC' for t in tags)
 
 
 def test_adjacent_operand_is_candidate_for_word_operator():
@@ -41,14 +40,14 @@ def test_inna_rows_are_not_duplicated():
 
 def test_ma_before_illa_is_negative_sense():
     rows = [t for t in T.tags_for_word('مَا', 'إِلَّا') if t[0] == 'عامل']
-    assert rows and all('النفي' in t[1] for t in rows)
+    assert rows and all('نفي' in t[1] for t in rows)
     assert all(t[3] == 'WORD_OPERATOR_SENSE_NEXT_ILLA' for t in rows)
 
 
 def test_plural_waw_ending_keeps_both_branches():
-    # كَفَرُوا: اللاحقة لم تُثبت بعد، فالكاف تبقى وجهًا متنافسًا لا تُحذف
+    # كَفَرُوا: السابقة تشخيصية فقط، ولا تُعدّ عاملًا بالجدول الرئيسي
     rows = [t for t in T.tags_for_word('كَفَرُوا') if t[0] == 'عامل']
-    assert rows and all(t[3] == 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' for t in rows)
+    assert rows and all(t[5] == 'DIAGNOSTIC_ONLY' for t in rows)
 
 
 def test_waw_and_fa_are_never_proclitic_operators():
@@ -61,7 +60,7 @@ def test_merged_boundary_blocks_proclitic_candidate():
     # معيار ١: الحرف الملتحم بما بعده في المقطع لا يُرشَّح قبل إثبات حدّه
     for w in ('لِّلۡمُتَّقِينَ', 'بِٱلۡغَيۡبِ'):
         rows = T.tags_for_word(w)
-        assert rows and all(t[5] == 'DEFERRED' for t in rows), w
+        assert rows and all(t[5] == 'DIAGNOSTIC_ONLY' for t in rows), w
 
 
 def test_function_is_undecided_without_article_evidence():
@@ -79,7 +78,7 @@ def test_unreadable_operand_suspends_the_relation():
 def test_kana_uu_is_not_proven_cv():
     # «كَانُوا» أول مقطعها CVV: لا يُعدّ حدًّا مثبتًا، ويبقى مؤجلًا لا محذوفًا
     rows = T.tags_for_word('كَانُوا')
-    assert rows and all(t[3] == 'PROCLITIC_DEFERRED' and t[5] == 'DEFERRED' for t in rows)
+    assert rows and all(t[3] == 'PROCLITIC_DIAGNOSTIC' and t[5] == 'DIAGNOSTIC_ONLY' for t in rows)
     assert rows[0][6] == 'FIRST_SYLLABLE_CVV'
 
 
@@ -87,15 +86,15 @@ def test_deferred_rows_are_kept_not_dropped():
     # «بِٱلۡغَيۡبِ» و«لِّلۡمُتَّقِينَ»: الحد ملتحم، فتبقى صفوفًا مؤجلة بالسبب
     for w in ('بِٱلۡغَيۡبِ', 'لِّلۡمُتَّقِينَ'):
         rows = T.tags_for_word(w)
-        assert rows and all(t[5] == 'DEFERRED' and t[6] in ('MERGED_WITH_FOLLOWING', 'NO_CLEAN_SYLLABLES') for t in rows), w
+        assert rows and all(t[5] == 'DIAGNOSTIC_ONLY' and t[6] in ('MERGED_WITH_FOLLOWING', 'NO_CLEAN_SYLLABLES') for t in rows), w
 
 
 def test_min_kasra_is_jarr_and_fatha_is_conditional():
     # «مِنَ» بالكسرة جار، و«مَنْ» بالفتحة شرطية: الشكل يميّز الوجه
-    jar = [t[1] for t in T.tags_for_word('مِنَ') if t[0] == 'عامل']
-    cond = [t[1] for t in T.tags_for_word('مَنْ') if t[0] == 'عامل']
-    assert jar and all('الشرط' not in l for l in jar)
-    assert cond and all('الشرط' in l for l in cond)
+    jar = [t[2] for t in T.tags_for_word('مِنْ') if t[0] == 'عامل']
+    cond = [t[2] for t in T.tags_for_word('مَنْ') if t[0] == 'عامل']
+    assert jar and all(c == 'جر' for c in jar)
+    assert cond and all('جزم' in c for c in cond)
 
 
 def test_operand_identity_cells_are_present():
