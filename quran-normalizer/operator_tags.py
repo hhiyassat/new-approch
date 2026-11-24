@@ -99,8 +99,30 @@ GENERAL_JARR_PROCLITICS = {'ب', 'ل', 'ك'}
 PROCLITIC = {o['skeleton']: o for o in OPS if o['skeleton'] in GENERAL_JARR_PROCLITICS and 'جر' in o['cases']}
 
 
+def _unit_boundary(word):
+    """حدّ الوحدة: الحرف الأول مقطع مستقل بحركته (CV) دون التحام بما بعده.
+    → (مُثبت؟، الحالة). لا يُرشَّح أي عامل قبل إثبات هذا الحد."""
+    try:
+        from gate import build_cells, syllabify
+        cells = build_cells(word)
+    except ValueError:
+        return False, 'UNSUPPORTED_GLYPH'
+    sylls, residue = syllabify(cells)
+    if residue or not sylls:
+        return False, 'NO_CLEAN_SYLLABLES'
+    first = sylls[0]['cells']
+    if first == [0] and cells[0].vowel:
+        return True, 'PROVEN_CV_UNIT'
+    return False, 'MERGED_WITH_FOLLOWING'
+
+
+def _is_article_text(text):
+    return skeleton(text).startswith('ال')
+
+
 def tags_for_word(word, next_word=None):
-    """→ قائمة وسوم: (الوسم، المعامل، الحالة، الدليل، الكلمة المرتبطة)."""
+    """→ قائمة وسوم: (الوسم، المعامل، الحالة المتوقعة، الدليل، الكلمة المرتبطة، حالة_العلاقة، حد_الوحدة، حالة_الوظيفة).
+    كل وسم مرشح. العلاقة تُعلَّق (SUSPENDED) إذا لم تُعرف هوية الطرف الآخر."""
     out = []
     sk = skeleton(word)
     if sk in WHOLE:
@@ -111,22 +133,43 @@ def tags_for_word(word, next_word=None):
             if k not in keys:
                 keys.add(k); uniq.append(grp)
         # قرينة واحدة مؤكدة: «ما» بعدها «إلا» تكون نافية حاصرة، فتُحذف المعاني الأخرى لهذا الوقوع
-        if sk == 'ما' and next_word and skeleton(next_word) in ('الا', 'إلا'.replace('إ', 'ا')):
+        if sk == 'ما' and next_word and skeleton(next_word) in ('الا',):
             uniq = [g for g in uniq if any('النفي' in l for l in g['labels'])] or uniq
             evidence_base = 'WORD_OPERATOR_SENSE_NEXT_ILLA'
         else:
             evidence_base = 'WORD_OPERATOR_SENSE'
+        bound_ok, bound_state = _unit_boundary(word)
         for grp in uniq:
             case = ' / '.join(grp['cases']) if grp['cases'] else '—'
             label = o['plain'] + ' (' + ' / '.join(l for l in grp['labels'] if l) + ')' if grp['labels'] and any(grp['labels']) else o['plain']
-            out.append(('عامل', label, case, evidence_base, word, 'CANDIDATE'))
+            # الكلمة الكاملة عامل: حدّها هو الكلمة نفسها، فالحد لا يُختبر بالتقطيع هنا
+            out.append(('عامل', label, case, evidence_base, word, 'CANDIDATE', 'WHOLE_WORD', 'CANDIDATE_CASE'))
             if next_word:
-                out.append(('معمول', label, case, 'ADJACENT_AFTER_OPERATOR', next_word, 'CANDIDATE'))
+                try:
+                    from gate import build_cells
+                    build_cells(next_word)
+                    rel = 'CANDIDATE'
+                except ValueError:
+                    rel = 'SUSPENDED_OPERAND_UNREADABLE'
+                out.append(('معمول', label, case, 'ADJACENT_AFTER_OPERATOR', next_word, rel, 'NEXT_WORD', 'CANDIDATE_CASE'))
         return out
     if sk and sk[0] in PROCLITIC and len(sk) > 1:
+        ok, why = _unit_boundary(word)
+        if not ok:
+            # لا ترشيح قبل إثبات حد الوحدة: الحرف ملتحم بما بعده في المقطع نفسه
+            return []
         o = PROCLITIC[sk[0]]
-        # إن انتهت الكلمة بواو الجماعة فالوجهان متنافسان حتى تُثبت اللاحقة: لا يُحذف أحدهما
+        cells_text_start = None
+        try:
+            from gate import build_cells
+            c = build_cells(word)
+            cells_text_start = c[1].span[0]
+        except (ValueError, IndexError):
+            return []
+        operand = word[cells_text_start:]
+        # الوظيفة لا تُعيَّن بالشكل وحده: قرينة الكلمة التالية (ال) تبقيها مرشّحة لا محسومة
+        func = 'NEXT_ARTICLE_CANDIDATE' if _is_article_text(operand) else 'UNDECIDED'
         evidence = 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' if sk.endswith('وا') else 'PROCLITIC_OPERATOR'
-        out.append(('عامل', o['plain'], 'جر', evidence, word, 'CANDIDATE'))
-        out.append(('معمول', o['plain'], 'جر', evidence, word, 'CANDIDATE'))
+        out.append(('عامل', o['plain'], 'جر', evidence, operand, 'CANDIDATE', why, func))
+        out.append(('معمول', o['plain'], 'جر', evidence, operand, 'CANDIDATE', why, func))
     return out

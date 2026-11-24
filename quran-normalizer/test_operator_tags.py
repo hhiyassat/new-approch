@@ -11,7 +11,7 @@ def test_word_operator_with_nasb_rafa():
 
 
 def test_proclitic_jarr_operator_is_candidate_only():
-    tags = T.tags_for_word('بِٱلۡغَيۡبِ')
+    tags = T.tags_for_word('بِمَآ')
     assert all(t[5] == 'CANDIDATE' for t in tags)
     assert tags[0][2] == 'جر' and tags[1][0] == 'معمول'
 
@@ -49,6 +49,30 @@ def test_plural_waw_ending_keeps_both_branches():
     # كَفَرُوا: اللاحقة لم تُثبت بعد، فالكاف تبقى وجهًا متنافسًا لا تُحذف
     rows = [t for t in T.tags_for_word('كَفَرُوا') if t[0] == 'عامل']
     assert rows and all(t[3] == 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' for t in rows)
+
+
+def test_waw_and_fa_are_never_proclitic_operators():
+    # معيار ١: الواو والفاء لا تُرشّحان عاملًا؛ «وَلَدَانِ» و«فَالِقُ» بلا وسم
+    assert T.tags_for_word('وَلَدَانِ') == []
+    assert T.tags_for_word('فَالِقُ') == []
+
+
+def test_merged_boundary_blocks_proclitic_candidate():
+    # معيار ١: الحرف الملتحم بما بعده في المقطع لا يُرشَّح قبل إثبات حدّه
+    assert T.tags_for_word('لِّلۡمُتَّقِينَ') == []
+    assert T.tags_for_word('بِٱلۡغَيۡبِ') == []
+
+
+def test_function_is_undecided_without_article_evidence():
+    # معيار ٢: الشكل CV وحده لا يعيّن الوظيفة
+    rows = T.tags_for_word('بِمَآ')
+    assert rows and all(t[7] == 'UNDECIDED' for t in rows)
+
+
+def test_unreadable_operand_suspends_the_relation():
+    # معيار ٣: إذا تعذّرت هوية الطرف الآخر تُعلَّق العلاقة ولا تُخمَّن
+    rows = [t for t in T.tags_for_word('إِنَّ', 'يُؤۡمِنُونَ') if t[0] == 'معمول']
+    assert rows and all(t[5] == 'SUSPENDED_OPERAND_UNREADABLE' for t in rows)
 
 
 def test_non_operator_has_no_tag():
