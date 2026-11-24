@@ -2,12 +2,62 @@
 """فاحص صفوف الوسم: يتحقق أن كل علاقة تُشير إلى الطرف المقصود، وأن خلايا كل طرف تفسَّر داخل وقوعه.
 الاستعمال: python3 check_operator_rows.py <operator_tags.tsv> <quran_hafs.tsv>
 يخرج برمز غير صفر عند أي مخالفة، ويطبع عددها."""
-import csv, sys, os
+import csv, sys, os, json, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dagger_normalize import join_split_maqsura
 from gate import build_cells
 
+PHI_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'spelling', 'phi_letters.json')
+
+def load_phi(path=PHI_PATH):
+    with open(path, encoding='utf-8') as f:
+        return json.load(f)['letters']
+
+def load_subs(path=PHI_PATH):
+    with open(path, encoding='utf-8') as f:
+        return json.load(f).get('word_equivalences', {})
+
+def _marks_from(word, j):
+    k = j
+    while k < len(word) and unicodedata.category(word[k]) == 'Mn':
+        k += 1
+    return k
+
+def strip_phi(word, letters):
+    # ئ المفكّكة: ي تتبعها علاماتها، وفيها همزة U+0654 في أي موضع بين علاماتها
+    out, i = [], 0
+    while i < len(word):
+        hit = next((L for L in letters if word.startswith(L, i)), None)
+        if hit:
+            i += len(hit)
+            i = _marks_from(word, i)
+            continue
+        if word[i] == '\u064a':
+            k = _marks_from(word, i + 1)
+            if '\u0654' in word[i + 1:k]:
+                i = k          # يحذف الحرف مع علاماته كلها
+                continue
+        out.append(word[i]); i += 1
+    return ''.join(out)
+
+def cells_for(word, letters, subs, used):
+    try:
+        return build_cells(word)
+    except ValueError:
+        if word in subs:                 # تكافؤ مرخّص لكلمة بعينها
+            fb = subs[word]
+        else:
+            fb = strip_phi(word, letters)
+        if fb != word:
+            cells = build_cells(fb)   # يرفع الخطأ إن بقي الفشل
+            used.append((word, fb))
+            return cells
+        raise
+
 def main(tags_path, quran_path):
+    letters = load_phi()
+    subs = load_subs()
+    used = []
     rows = list(csv.reader(open(tags_path, encoding='utf-8'), delimiter='\t'))
     header, data = rows[0], rows[1:]
     idx = {name: i for i, name in enumerate(header)}
@@ -34,13 +84,19 @@ def main(tags_path, quran_path):
                 if related != nxt:
                     violations.append(('RELATED_NOT_NEXT', occ, word, related))
                 if tag == 'معمول' and cells:
-                    n_cells = len(build_cells(words[nxt]))
-                    got = len(cells.split())
-                    if got != n_cells:
-                        violations.append(('OPERAND_CELLS_MISMATCH', occ, words[nxt], f'{got}!={n_cells}'))
+                    try:
+                        n_cells = len(cells_for(words[nxt], letters, subs, used))
+                    except ValueError as e:
+                        violations.append(('OPERAND_UNBUILDABLE', occ, words[nxt], str(e)[:60]))
+                    else:
+                        got = len(cells.split())
+                        if got != n_cells:
+                            violations.append(('OPERAND_CELLS_MISMATCH', occ, words[nxt], f'{got}!={n_cells}'))
             elif related:
                 violations.append(('RELATED_WITHOUT_NEXT', occ, word, related))
-    print(f'rows={len(data)} violations={len(violations)}')
+    print(f'rows={len(data)} violations={len(violations)} phi_stripped_operands={len(used)}')
+    for w, st in sorted(set(used)):
+        print('PHI_STRIPPED', w, '->', st)
     for v in violations[:20]:
         print(v)
     return 1 if violations else 0

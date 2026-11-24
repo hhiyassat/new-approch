@@ -345,10 +345,20 @@ def _is_article_text(text):
 
 
 def _cell_ids(text, start=0):
+    from gate import build_cells
     try:
-        from gate import build_cells
         return ' '.join(str(c.idx + start) for c in build_cells(text)), True
     except ValueError:
+        # قاعدة φ المرخّصة (ملف data/spelling/phi_letters.json) عند فشل البناء فقط.
+        # أرقام الخلايا هنا تشير إلى الصورة بعد الحذف، وهذا مُعلَن في التوثيق.
+        try:
+            from check_operator_rows import load_phi, load_subs, strip_phi
+            subs = load_subs()
+            fb = subs[text] if text in subs else strip_phi(text, load_phi())
+            if fb != text:
+                return ' '.join(str(c.idx + start) for c in build_cells(fb)), True
+        except ValueError:
+            pass
         return 'UNREADABLE', False
 
 
