@@ -109,11 +109,13 @@ _ALIF_FORMS = {'أ': 'ا\u0654', 'إ': 'ا\u0655', 'آ': 'ا\u0653', 'ٱ': 'ا'}
 
 
 def vsig(text):
-    """توقيع مشكول: كل حرف أساسي مع علاماته مرتّبةً، بلا علامة الحرف الأخير (الإعراب الآخِر يتغير بالوقف).
-    صور الألف تُوحَّد، والهمزة السفلى المكتوبة منفصلة تُعامل علامةً على الألف."""
+    """توقيع مشكول كامل: كل حرف أساسي مع كل علاماته مرتّبةً. لا تُحذف حركة ولا سكون.
+    صور الألف تُوحَّد، والهمزة السفلى المكتوبة تبقى علامة على الألف."""
     units = []
     for ch in text:
-        if ch in _HARAKAT or ch == '\u0654' or ch == '\u0655' or ch == '\u0653':
+        if ch == '\u06E1':                       # السكون الصغير القرآني هو السكون نفسه
+            ch = '\u0652'
+        if ch in _HARAKAT or ch in ('\u0653', '\u0654', '\u0655'):
             if units:
                 units[-1] = units[-1] + ch
         elif ch in (TATWEEL, '\u200f') or ch.isspace() or ch in set(WAQF) or ch in set(NON_PHONETIC):
@@ -122,16 +124,40 @@ def vsig(text):
             units.append(_ALIF_FORMS[ch])
         else:
             units.append(ch)
-    out = []
-    for u in units:
-        letter = u[0]
-        marks = ''.join(sorted(c for c in u[1:]))
-        out.append(letter + marks)
-    if out:
-        # الحركة الآخِرة تُحذف، أما الشدة فجزء من هوية الحرف (إنَّ ليست إنْ)
-        last = out[-1]
-        out[-1] = last[0] + ('\u0651' if '\u0651' in last[1:] else '')
-    return tuple(out)
+    return tuple(letter[0] + ''.join(sorted(letter[1:])) for letter in units)
+
+
+_FINAL_CAPABLE = set('بتثجحخدذرزسشصضطظعغفقكلمنهي')
+_FINAL_VOWEL_MARKS = set('\u064B\u064C\u064D\u064E\u064F\u0650\u0652')  # الحركات الآخرة فقط، الشدة تبقى
+
+
+def vsig_variants(op):
+    """مفاتيح المطابقة لعامل مشكول: الصيغة كما هي، وتحويلات الحركة الآخرة المرخّصة فقط.
+    التحويل لا يحذف شيئًا: يضيف صيغة بحركة آخرة أخرى على الحرف نفسه، ويُسجَّل نوعه.
+    مرخّص لأن الكتالوج يكتب الصيغة الوقفية أو الموصولة، والنص يصل بينهما بحسب الموقع."""
+    base = list(vsig(op))
+    out = [(tuple(base), 'EXACT')]
+    if not base:
+        return out
+    last = base[-1]
+    letter = last[0]
+    if letter not in _FINAL_CAPABLE:
+        return out
+    for mark, rule in (('\u064E', 'FINAL_FATHA_VARIANT'), ('\u064F', 'FINAL_DAMMA_VARIANT'),
+                       ('\u0650', 'FINAL_KASRA_VARIANT'), ('\u0652', 'FINAL_SUKUN_VARIANT')):
+        cand = base[:-1] + [letter + ''.join(sorted(set(last[1:]) - _FINAL_VOWEL_MARKS) + [mark])]
+        key = tuple(cand)
+        if key not in [k for k, _ in out]:
+            out.append((key, rule))
+    return out
+
+
+def effective_vowel(cells, idx):
+    """الحركة الفعلية لحرف: في زوج الشدة الحركة تُسجَّل على النسخة الثانية (لِّ = كسرة + شدة)."""
+    c = cells[idx]
+    if c.vowel is None and c.shadda == 'first' and idx + 1 < len(cells) and cells[idx + 1].shadda == 'second':
+        return cells[idx + 1].vowel
+    return c.vowel
 
 
 def has_vocalization(text):
@@ -157,11 +183,12 @@ def _load_vocalized_catalog():
         op = (r.get('Operator') or '').strip()
         if not op:
             continue
-        key = vsig(op)
-        table.setdefault(key, []).append(dict(
-            operator=op, purpose=(r.get('Purpose/Usage') or '').strip(),
-            group=(r.get('Arabic Group Name') or '').strip(),
-            cases=_cases_from_note(r.get('Note') or ''), note=(r.get('Note') or '').strip()))
+        for key, rule in vsig_variants(op):
+            table.setdefault(key, []).append(dict(
+                operator=op, purpose=(r.get('Purpose/Usage') or '').strip(),
+                group=(r.get('Arabic Group Name') or '').strip(),
+                cases=_cases_from_note(r.get('Note') or ''), note=(r.get('Note') or '').strip(),
+                variant=rule))
     return table
 
 
@@ -262,6 +289,8 @@ def tags_for_word(word, next_word=None):
     if vs in VOCAL:
         rows_v = VOCAL[vs]
         evidence_v = 'WORD_OPERATOR_VOCALIZED'
+        if all(r.get('variant') != 'EXACT' for r in rows_v):
+            evidence_v = 'WORD_OPERATOR_FINAL_VARIANT'
         # قرينة واحدة مؤكدة بالشكل: «ما» بعدها «إلا» بالشكل تكون نافية حاصرة
         if vs == vsig('مَا') and next_word and has_vocalization(next_word) and vsig(next_word) == vsig('إِلَّا'):
             narrowed = [r for r in rows_v if 'نفي' in r['purpose']]
@@ -290,9 +319,10 @@ def tags_for_word(word, next_word=None):
         return out
     if len(cells) > 1 and cells[0].carrier in PROCLITIC:
         o = PROCLITIC[cells[0].carrier]
+        has_vowel = effective_vowel(cells, 0) is not None
         ok, why, shape = _unit_boundary(word)
         root_ok, root_why = _root_exclusion_proven(word)
-        if not cells[0].vowel or 'UNMARKED' in cells[0].flags:
+        if not has_vowel or 'UNMARKED' in cells[0].flags:
             ok, why = False, 'FIRST_LETTER_NOT_A_VOWELLED_UNIT'
         if not ok:
             reason = why

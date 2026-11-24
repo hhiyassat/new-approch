@@ -31,10 +31,10 @@ def main(argv):
                 own = f'{rec[0]}:{rec[1]}:{pos}'
                 nxt_occ = f'{rec[0]}:{rec[1]}:{pos + 1}' if nxt is not None else ''
                 for tag, op, case, evidence, operand, relation, boundary, function, cells in T.tags_for_word(w, nxt):
-                    if tag == 'عامل' and evidence.startswith('WORD_OPERATOR'):
-                        related = nxt_occ                      # العامل الكامل يرتبط بالكلمة التالية
+                    if evidence.startswith('PROCLITIC'):
+                        related = own                          # السابقة وطرفها داخل الوقوع نفسه
                     else:
-                        related = own                          # المعمول المجاور أو السابقة: الطرف الآخر في الوقوع نفسه
+                        related = nxt_occ                      # العامل الكامل والمعمول المجاور: الطرف الآخر هو الكلمة التالية
                     rows.append([rec[0], rec[1], pos, own, w, tag, op, case,
                                  evidence, operand, relation, boundary, function, cells, related])
     with open(os.path.join(out_dir, 'operator_tags.tsv'), 'w', encoding='utf-8', newline='') as f:
