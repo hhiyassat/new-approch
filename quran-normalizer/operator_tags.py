@@ -30,7 +30,7 @@ def _effect_cases(effect):
     """كل الحالات المذكورة في الأثر، بترتيب النص: قد يذكر الأثر نصب الاسم ورفع الخبر معًا."""
     e = effect or ''
     found = []
-    for name, stems in (('جر', ('جر ', 'جر', 'يجر', 'تجر')), ('نصب', ('نصب', 'تنصب', 'ينصب')), ('رفع', ('رفع', 'ترفع', 'يرفع'))):
+    for name, stems in (('جر', ('جر ', 'جر', 'يجر', 'تجر')), ('نصب', ('نصب', 'تنصب', 'ينصب')), ('رفع', ('رفع', 'ترفع', 'يرفع')), ('جزم', ('جزم', 'يجزم', 'تجزم'))):
         pos = [e.find(st) for st in stems if st in e]
         if pos:
             found.append((min(p for p in pos if p >= 0), name))
@@ -45,16 +45,24 @@ def load_operators():
             rec = json.loads(line)
             plain = rec.get('plain') or rec.get('printed_form') or ''
             meanings = rec.get('meanings') or []
-            cases, effects = [], []
+            cases, effects, senses = [], [], []
             for m in meanings:
                 eff = m.get('grammatical_effect', '') or ''
                 if eff:
                     effects.append(eff)
-                for c in _effect_cases(eff):
+                sc = _effect_cases(eff)
+                for c in sc:
                     if c not in cases:
                         cases.append(c)
+                senses.append((m.get('meaning_label') or '', tuple(sc)))
+            # المعاني التي لها الحالات نفسها تُجمع في مجموعة واحدة، ويبقى كل معنى مسمّى
+            groups = {}
+            for label, sc in senses:
+                groups.setdefault(sc, []).append(label)
+            sense_groups = [dict(labels=labels, cases=list(sc)) for sc, labels in groups.items()]
             ops.append(dict(plain=plain, skeleton=skeleton(plain), effect=' | '.join(effects),
-                            case=' / '.join(cases), cases=cases, printed_number=rec.get('printed_number')))
+                            case=' / '.join(cases), cases=cases, senses=sense_groups,
+                            printed_number=rec.get('printed_number')))
     return ops
 
 
@@ -69,6 +77,7 @@ def _merge(records):
         if g is None:
             m[o['skeleton']] = dict(o, plains=[o['plain']])
             m[o['skeleton']]['cases'] = list(o['cases'])
+            m[o['skeleton']]['sense_groups'] = list(o['senses'])
         else:
             if o['plain'] not in g['plains']:
                 g['plains'].append(o['plain'])
@@ -76,6 +85,9 @@ def _merge(records):
                 if c not in g['cases']:
                     g['cases'].append(c)
             g['case'] = ' / '.join(g['cases'])
+            seen = {(tuple(x['labels']), tuple(x['cases'])) for x in g['sense_groups']}
+            g['sense_groups'] = g['sense_groups'] + [x for x in o['senses']
+                                                    if (tuple(x['labels']), tuple(x['cases'])) not in seen]
             g['effect'] = g['effect'] + ' | ' + o['effect'] if o['effect'] else g['effect']
             g['plain'] = ' / '.join(g['plains'])
     return m
@@ -93,9 +105,23 @@ def tags_for_word(word, next_word=None):
     sk = skeleton(word)
     if sk in WHOLE:
         o = WHOLE[sk]
-        out.append(('عامل', o['plain'], o['case'], 'WORD_OPERATOR', word, 'CANDIDATE'))
-        if next_word:
-            out.append(('معمول', o['plain'], o['case'], 'ADJACENT_AFTER_OPERATOR', next_word, 'CANDIDATE'))
+        uniq, keys = [], set()
+        for grp in o['sense_groups']:
+            k = (tuple(grp['labels']), tuple(grp['cases']))
+            if k not in keys:
+                keys.add(k); uniq.append(grp)
+        # قرينة واحدة مؤكدة: «ما» بعدها «إلا» تكون نافية حاصرة، فتُحذف المعاني الأخرى لهذا الوقوع
+        if sk == 'ما' and next_word and skeleton(next_word) in ('الا', 'إلا'.replace('إ', 'ا')):
+            uniq = [g for g in uniq if any('النفي' in l for l in g['labels'])] or uniq
+            evidence_base = 'WORD_OPERATOR_SENSE_NEXT_ILLA'
+        else:
+            evidence_base = 'WORD_OPERATOR_SENSE'
+        for grp in uniq:
+            case = ' / '.join(grp['cases']) if grp['cases'] else '—'
+            label = o['plain'] + ' (' + ' / '.join(l for l in grp['labels'] if l) + ')' if grp['labels'] and any(grp['labels']) else o['plain']
+            out.append(('عامل', label, case, evidence_base, word, 'CANDIDATE'))
+            if next_word:
+                out.append(('معمول', label, case, 'ADJACENT_AFTER_OPERATOR', next_word, 'CANDIDATE'))
         return out
     if sk and sk[0] in PROCLITIC and len(sk) > 1:
         o = PROCLITIC[sk[0]]

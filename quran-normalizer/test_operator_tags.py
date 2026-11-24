@@ -7,7 +7,7 @@ import operator_tags as T
 
 def test_word_operator_with_nasb_rafa():
     tags = T.tags_for_word('إِنَّ', 'ٱلنَّاسِ')
-    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR'
+    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR_SENSE'
 
 
 def test_proclitic_jarr_operator_is_candidate_only():
@@ -24,6 +24,25 @@ def test_adjacent_operand_is_candidate_for_word_operator():
 def test_conjunction_waw_is_not_a_general_proclitic():
     # الواو العاطفة ليست عاملًا جارًّا؛ لا تُوسم وَ... بوصفها عاملًا
     assert T.tags_for_word('وَٱلنَّاسِ') == []
+
+
+def test_ma_splits_by_sense_not_merged():
+    # «ما» النافية تنصب وترفع، والشرطية تجزم الفعل: لا تُجمع في حالة واحدة
+    rows = [t for t in T.tags_for_word('مَا', 'ٱلنَّاسِ') if t[0] == 'عامل']
+    cases = {c.strip() for t in rows for c in t[2].split('/')}
+    assert {'رفع', 'نصب', 'جزم'} <= cases
+
+
+def test_inna_rows_are_not_duplicated():
+    rows = [t for t in T.tags_for_word('إِنَّ', 'ٱلنَّاسِ') if t[0] == 'عامل']
+    labels = [t[1] for t in rows]
+    assert len(labels) == len(set(labels))
+
+
+def test_ma_before_illa_is_negative_sense():
+    rows = [t for t in T.tags_for_word('مَا', 'إِلَّا') if t[0] == 'عامل']
+    assert rows and all('النفي' in t[1] for t in rows)
+    assert all(t[3] == 'WORD_OPERATOR_SENSE_NEXT_ILLA' for t in rows)
 
 
 def test_non_operator_has_no_tag():
