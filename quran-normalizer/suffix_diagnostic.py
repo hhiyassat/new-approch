@@ -32,18 +32,23 @@ def diagnose(word):
         cells = build_cells(word)
     except ValueError as e:
         return dict(word=word, status='UNSUPPORTED_GLYPH', orthographic_ending=orth.endswith('وا'),
-                    representation_candidate=False, madd_owner_cell=None,
+                    representation_candidate=False, madd_owner_cell=None, owner_type=None,
                     licensed_suffix=False, executed_cut=False, note=str(e)[:80])
-    owner = None
+    owner, owner_type = None, None
     for c in cells:
-        if 'MADD_و' in c.flags and 'SILENT_ALIF_WAW_PLURAL' in c.flags:
-            owner = c.idx
+        if 'SILENT_ALIF_WAW_PLURAL' not in c.flags:
+            continue
+        if 'MADD_و' in c.flags:
+            owner, owner_type = c.idx, 'MADD_ON_PREVIOUS_CELL'      # الواو ممدودة داخل خلية سابقة
+        else:
+            owner, owner_type = c.idx, 'STANDALONE_WAW_CELL'        # الواو خلية مستقلة ساكنة (علامة المدة فوقها)
     return dict(
         word=word,
         status='OK',
         orthographic_ending=orth.endswith('وا'),
         representation_candidate=owner is not None,
         madd_owner_cell=owner,
+        owner_type=owner_type,
         licensed_suffix=False,
         executed_cut=False,
         note='',

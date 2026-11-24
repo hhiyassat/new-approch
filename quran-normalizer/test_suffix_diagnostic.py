@@ -11,6 +11,16 @@ def test_waw_alif_ending_is_orthographic_only():
     assert not d['licensed_suffix'] and not d['executed_cut']
 
 
+def test_standalone_waw_with_madda_mark_is_a_candidate():
+    d = diagnose('قَالُوٓاْ')
+    assert d['representation_candidate'] and d['owner_type'] == 'STANDALONE_WAW_CELL'
+
+
+def test_madd_on_previous_cell_is_a_candidate():
+    d = diagnose('كَفَرُوا')
+    assert d['representation_candidate'] and d['owner_type'] == 'MADD_ON_PREVIOUS_CELL'
+
+
 def test_no_ending_no_candidate():
     d = diagnose('كِتَابُ')
     assert not d['orthographic_ending'] and not d['representation_candidate']
