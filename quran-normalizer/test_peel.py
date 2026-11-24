@@ -150,6 +150,20 @@ def test_coverage_exceptions_are_explained():
     assert {e['status'] for e in exc} == {'ELIDED_SOLAR_LAM', 'MADD_ABSORBED'}
 
 
+def test_silent_plural_alif_is_mapped_not_unmapped():
+    cov_ok, exc = Pl._coverage('كَفَرُواْ', build_cells('كَفَرُواْ'))
+    assert cov_ok, 'الألف الصامتة لواو الجماعة تحويل مسجّل، لا محرف غير معلّل'
+    assert any(e['status'] == 'SILENT_ALIF_WAW_PLURAL' for e in exc)
+
+
+def test_dagger_madd_sukun_is_written_not_unknown():
+    w = 'ٱلصَّلَوٰةَ'
+    cells = build_cells(w)
+    sukun = Pl._internal_sukun(cells[1:], list(range(1, len(cells))), w)
+    origins = {s['origin'] for s in sukun}
+    assert 'UNKNOWN' not in origins and 'WRITTEN_MADD' in origins
+
+
 def test_coverage_unmapped_letter_fails():
     cells = build_cells('بِسۡمِ')
     ok, _ = Pl._coverage('بِسۡمِ', cells[:-1])

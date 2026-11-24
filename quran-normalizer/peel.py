@@ -144,6 +144,9 @@ def _coverage(word, cells):
             continue
         if ch in MADD_LETTERS:
             owners = [c for c in cells if c.span[1] <= i]
+            if owners and 'SILENT_ALIF_WAW_PLURAL' in owners[-1].flags and ch == 'ا':
+                exc.append(dict(char=i, status='SILENT_ALIF_WAW_PLURAL', owner_cell=owners[-1].idx))
+                continue
             if owners:
                 own = owners[-1]
                 between = word[own.span[1]:i]
@@ -155,12 +158,18 @@ def _coverage(word, cells):
     return ok, exc
 
 
-def _internal_sukun(cells, ids):
-    """أسكنة داخلية في الطرف: مصدر كل واحدة (مكتوب، أو من شدة، أو غير محسوم)."""
+def _internal_sukun(cells, ids, word=''):
+    """أسكنة داخلية في الطرف: مصدر كل واحدة (مكتوب، أو من شدة، أو ألف خنجرية مكتوبة، أو غير محسوم)."""
     out = []
     for k, c in enumerate(cells[:-1]):
         if c.sukun:
-            origin = 'UNKNOWN' if 'UNMARKED' in c.flags else 'SHADDA' if c.shadda else 'WRITTEN'
+            if 'UNMARKED' in c.flags:
+                # حرف مدّ بالألف الخنجرية المكتوبة: أصله مكتوب، وغيره غير محسوم
+                origin = 'WRITTEN_MADD' if '\u0670' in word[c.span[0]:c.span[1]] else 'UNKNOWN'
+            elif c.shadda:
+                origin = 'SHADDA'
+            else:
+                origin = 'WRITTEN'
             out.append(dict(cell_id=ids[k], origin=origin))
     return out
 
@@ -232,7 +241,7 @@ def _evaluate(word, cells, rule_id, parts, cov_ok, cov_exc, source):
             origin = ABSENT
         removed_ok = all(set(c.carrier for c in cells[s:e]) <= ALLOWED_REMOVED.get(r, set())
                          for r, s, e in _spans_of(parts) if r != 'HOST')
-        sukun = _internal_sukun(cells[p:], all_ids[p:]) if right['valid'] else []
+        sukun = _internal_sukun(cells[p:], all_ids[p:], word) if right['valid'] else []
         cut_ok = left['valid'] and right['valid'] and not pair_cut and cov_ok
         if pair_cut:
             fails.append('شدة مقطوعة عبر الحد، والفصل عبرها غير مرخّص')
