@@ -102,7 +102,7 @@ PROCLITIC = {o['skeleton']: o for o in OPS if o['skeleton'] in GENERAL_JARR_PROC
 
 # ---------------------------------------------------------------- المطابقة بالشكل (الكتالوج المشكول)
 import csv as _csv
-_HARAKAT = set('\u064B\u064C\u064D\u064E\u064F\u0650\u0651\u0652')
+_HARAKAT = set('\u064B\u064C\u064D\u064E\u064F\u0650\u0651\u0652\u06E1')  # + السكون الصغير القرآني
 
 
 def vsig(text):
