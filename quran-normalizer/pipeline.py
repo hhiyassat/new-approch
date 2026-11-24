@@ -5,6 +5,7 @@
 """
 from gate import build_cells, syllabify
 from classify_derived import classify
+from peel import analyze as peel_analyze
 
 
 def stage_cells(word):
@@ -29,11 +30,17 @@ def stage_classify(sylls):
     return classify([s['shape'] for s in sylls])
 
 
+def stage_peel(word, cells):
+    """بعد التقطيع والفحوص: اقتراحات التقشير المرخّصة (لا تغيّر حالة الكلمة ولا التصنيف)."""
+    return peel_analyze(word, cells)
+
+
 def run(word):
     cells = stage_cells(word)
     sylls, residue = stage_syllables(cells)
     errors = stage_checks(sylls, residue)
-    result = {'word': word, 'shapes': [s['shape'] for s in sylls], 'errors': errors}
+    result = {'word': word, 'shapes': [s['shape'] for s in sylls], 'errors': errors,
+              'peel': stage_peel(word, cells)}
     if errors:
         result['status'] = 'REJECTED'
         return result
