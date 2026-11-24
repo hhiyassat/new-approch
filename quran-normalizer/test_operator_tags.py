@@ -108,6 +108,28 @@ def test_quranic_small_sukun_counts_as_sukun():
     assert [t for t in T.tags_for_word('مِنۡ') if t[0] == 'عامل' and t[3] == 'WORD_OPERATOR_VOCALIZED']
 
 
+def test_dhu_is_not_a_tamyiz_operator():
+    # ذُو بمعنى صاحب: الصف المصحَّح لا يُنتج عاملًا بالنصب، والوقوع يبقى تشخيصًا بسبب سجل التصحيح
+    rows = T.tags_for_word('ذُو')
+    assert rows and all(t[0] == 'عامل' and t[3] == 'CATALOG_CORRECTION_NOT_OPERATOR' and t[6] == 'CORR-0001' for t in rows)
+    assert not [t for t in rows if 'نصب' in t[2]]
+
+
+def test_dhu_fault_is_visible_without_the_correction():
+    # إفساد: إلغاء التصحيح يعيد عاملًا بالنصب، فيجب أن يفشل الاختبار السابق لو عاد الخلل
+    T.reload_catalog(corrections=False)
+    try:
+        rows = [t for t in T.tags_for_word('ذُو') if t[0] == 'عامل']
+        assert [t for t in rows if 'نصب' in t[2]], 'الخلل الأصلي يجب أن يظهر دون التصحيح'
+    finally:
+        T.reload_catalog(corrections=True)
+
+
+def test_other_tamyiz_entries_are_untouched():
+    # ضابط: تمييز آخر (كَمْ) لا يتأثر بتصحيح ذُو
+    assert [t for t in T.tags_for_word('كَمْ') if t[0] == 'عامل' and t[3] == 'WORD_OPERATOR_VOCALIZED']
+
+
 def test_non_operator_has_no_tag():
     assert T.tags_for_word('ٱلنَّاسِ') == []
 

@@ -173,15 +173,54 @@ def _cases_from_note(note):
     return [n for _, n in sorted(cases)]
 
 
+CORRECTIONS_ENABLED = True
+
+
+def _demoted_catalog_rows():
+    """صفوف الكتالوج التي صحّحها سجل التصحيح بأنها ليست عاملًا (بأصلها وسببها في السجل)."""
+    if not CORRECTIONS_ENABLED:
+        return []
+    import os, json
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'operators', 'corrections.jsonl')
+    out = []
+    if os.path.exists(path):
+        for line in open(path, encoding='utf-8'):
+            line = line.strip()
+            if line:
+                rec = json.loads(line)
+                if rec.get('action') == 'NOT_OPERATOR':
+                    out.append(int(rec['catalog_row']))
+    return out
+
+
+def _demoted_forms():
+    """الصيغ التي صحّحها السجل، من السجل نفسه لا من الشيفرة: {الصيغة: معرّف التصحيح}."""
+    if not CORRECTIONS_ENABLED:
+        return {}
+    import os, json
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'operators', 'corrections.jsonl')
+    out = {}
+    if os.path.exists(path):
+        for line in open(path, encoding='utf-8'):
+            line = line.strip()
+            if line:
+                rec = json.loads(line)
+                if rec.get('action') == 'NOT_OPERATOR':
+                    out[rec['operator']] = rec['id']
+    return out
+
+
+
 def _load_vocalized_catalog():
     import os
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'operators', 'operators_catalog_split_vocalized.csv')
     table = {}
     if not os.path.exists(path):
         return table
-    for r in _csv.DictReader(open(path, encoding='utf-8-sig')):
+    demoted_rows = set(_demoted_catalog_rows())
+    for line_no, r in enumerate(_csv.DictReader(open(path, encoding='utf-8-sig')), start=1):
         op = (r.get('Operator') or '').strip()
-        if not op:
+        if not op or line_no in demoted_rows:
             continue
         for key, rule in vsig_variants(op):
             table.setdefault(key, []).append(dict(
@@ -193,6 +232,13 @@ def _load_vocalized_catalog():
 
 
 VOCAL = _load_vocalized_catalog()
+
+
+def reload_catalog(corrections=True):
+    """إعادة بناء فهرس الكتالوج مع تفعيل سجل التصحيح أو تعطيله (يستعمله الإفساد في الاختبارات)."""
+    global VOCAL, CORRECTIONS_ENABLED
+    CORRECTIONS_ENABLED = corrections
+    VOCAL = _load_vocalized_catalog()
 
 
 def _unit_boundary(word):
@@ -286,6 +332,11 @@ def tags_for_word(word, next_word=None):
         out.append(('عامل', word, '', 'UNVOCALIZED_INPUT', word, 'DIAGNOSTIC_ONLY', 'UNVOCALIZED_TEXT_REJECTED', 'NOT_EVALUATED', ''))
         return out
     vs = vsig(word)
+    demoted = _demoted_forms()
+    if demoted and vs in {vsig(k) for k in demoted}:
+        rule_id = next(v for k, v in demoted.items() if vsig(k) == vs)
+        out.append(('عامل', word, '', 'CATALOG_CORRECTION_NOT_OPERATOR', word, 'DIAGNOSTIC_ONLY', rule_id, 'NOT_EVALUATED', ''))
+        return out
     if vs in VOCAL:
         rows_v = VOCAL[vs]
         evidence_v = 'WORD_OPERATOR_VOCALIZED'
