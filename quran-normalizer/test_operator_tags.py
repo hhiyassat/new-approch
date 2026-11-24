@@ -7,7 +7,7 @@ import operator_tags as T
 
 def test_word_operator_with_nasb_rafa():
     tags = T.tags_for_word('إِنَّ', 'ٱلنَّاسِ')
-    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR_SENSE'
+    assert tags[0][0] == 'عامل' and tags[0][2] == 'نصب / رفع' and tags[0][3] == 'WORD_OPERATOR_SKELETON_MATCH'
 
 
 def test_proclitic_jarr_operator_is_candidate_only():
@@ -59,8 +59,9 @@ def test_waw_and_fa_are_never_proclitic_operators():
 
 def test_merged_boundary_blocks_proclitic_candidate():
     # معيار ١: الحرف الملتحم بما بعده في المقطع لا يُرشَّح قبل إثبات حدّه
-    assert T.tags_for_word('لِّلۡمُتَّقِينَ') == []
-    assert T.tags_for_word('بِٱلۡغَيۡبِ') == []
+    for w in ('لِّلۡمُتَّقِينَ', 'بِٱلۡغَيۡبِ'):
+        rows = T.tags_for_word(w)
+        assert rows and all(t[5] == 'DEFERRED' for t in rows), w
 
 
 def test_function_is_undecided_without_article_evidence():
@@ -73,6 +74,33 @@ def test_unreadable_operand_suspends_the_relation():
     # معيار ٣: إذا تعذّرت هوية الطرف الآخر تُعلَّق العلاقة ولا تُخمَّن
     rows = [t for t in T.tags_for_word('إِنَّ', 'يُؤۡمِنُونَ') if t[0] == 'معمول']
     assert rows and all(t[5] == 'SUSPENDED_OPERAND_UNREADABLE' for t in rows)
+
+
+def test_kana_uu_is_not_proven_cv():
+    # «كَانُوا» أول مقطعها CVV: لا يُعدّ حدًّا مثبتًا، ويبقى مؤجلًا لا محذوفًا
+    rows = T.tags_for_word('كَانُوا')
+    assert rows and all(t[3] == 'PROCLITIC_DEFERRED' and t[5] == 'DEFERRED' for t in rows)
+    assert rows[0][6] == 'FIRST_SYLLABLE_CVV'
+
+
+def test_deferred_rows_are_kept_not_dropped():
+    # «بِٱلۡغَيۡبِ» و«لِّلۡمُتَّقِينَ»: الحد ملتحم، فتبقى صفوفًا مؤجلة بالسبب
+    for w in ('بِٱلۡغَيۡبِ', 'لِّلۡمُتَّقِينَ'):
+        rows = T.tags_for_word(w)
+        assert rows and all(t[5] == 'DEFERRED' and t[6] in ('MERGED_WITH_FOLLOWING', 'NO_CLEAN_SYLLABLES') for t in rows), w
+
+
+def test_min_kasra_is_jarr_and_fatha_is_conditional():
+    # «مِنَ» بالكسرة جار، و«مَنْ» بالفتحة شرطية: الشكل يميّز الوجه
+    jar = [t[1] for t in T.tags_for_word('مِنَ') if t[0] == 'عامل']
+    cond = [t[1] for t in T.tags_for_word('مَنْ') if t[0] == 'عامل']
+    assert jar and all('الشرط' not in l for l in jar)
+    assert cond and all('الشرط' in l for l in cond)
+
+
+def test_operand_identity_cells_are_present():
+    rows = [t for t in T.tags_for_word('بِمَآ') if t[0] == 'معمول']
+    assert rows and rows[0][8] != ''
 
 
 def test_non_operator_has_no_tag():
