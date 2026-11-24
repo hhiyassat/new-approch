@@ -45,6 +45,12 @@ def test_ma_before_illa_is_negative_sense():
     assert all(t[3] == 'WORD_OPERATOR_SENSE_NEXT_ILLA' for t in rows)
 
 
+def test_plural_waw_ending_keeps_both_branches():
+    # كَفَرُوا: اللاحقة لم تُثبت بعد، فالكاف تبقى وجهًا متنافسًا لا تُحذف
+    rows = [t for t in T.tags_for_word('كَفَرُوا') if t[0] == 'عامل']
+    assert rows and all(t[3] == 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' for t in rows)
+
+
 def test_non_operator_has_no_tag():
     assert T.tags_for_word('ٱلنَّاسِ') == []
 

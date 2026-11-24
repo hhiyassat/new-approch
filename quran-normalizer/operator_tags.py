@@ -125,6 +125,8 @@ def tags_for_word(word, next_word=None):
         return out
     if sk and sk[0] in PROCLITIC and len(sk) > 1:
         o = PROCLITIC[sk[0]]
-        out.append(('عامل', o['plain'], 'جر', 'PROCLITIC_OPERATOR', word, 'CANDIDATE'))
-        out.append(('معمول', o['plain'], 'جر', 'PROCLITIC_OPERATOR', word, 'CANDIDATE'))
+        # إن انتهت الكلمة بواو الجماعة فالوجهان متنافسان حتى تُثبت اللاحقة: لا يُحذف أحدهما
+        evidence = 'PROCLITIC_OPERATOR_BRANCHED_SUFFIX' if sk.endswith('وا') else 'PROCLITIC_OPERATOR'
+        out.append(('عامل', o['plain'], 'جر', evidence, word, 'CANDIDATE'))
+        out.append(('معمول', o['plain'], 'جر', evidence, word, 'CANDIDATE'))
     return out
