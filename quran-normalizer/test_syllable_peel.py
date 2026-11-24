@@ -45,17 +45,29 @@ def test_positional_sides_for_right_candidate():
     assert c['left_syllables'] == ['CVC', 'CV', 'CV'] and c['right_syllables'] == ['CV']
 
 
-def test_root_letters_block_detachment():
-    # رَيۡبَۛ: ر وب ليستا من أحرف الإلحاق، فلا يُزال أي جزء منها
+def test_no_affix_class_blocks_detachment():
+    # رَيۡبَۛ: كلا الجزأين خارج أبواب التقشير المعتمدة
     res = _cands('رَيۡبَۛ')
     assert res and all(c['final_verdict'] == 'REJECTED' for c in res)
-    assert all('ROOT_LETTER_IN_DETACHED' in c['reason'] for c in res)
+    assert all(c['reason'].startswith('NO_AFFIX_CLASS') for c in res)
 
 
-def test_affix_only_detachment_still_pending():
-    # هُ من أحرف سألتمونيها: تبقى PENDING لا REJECTED
-    c = [c for c in _cands('نَكْتُبُهُ') if c['detached_text'] == 'هُ'][0]
-    assert c['final_verdict'] == 'PENDING'
+def test_gate_switch_is_the_cause():
+    # تعطيل البوابة يغيّر حكم رَيۡبَۛ: الرفض سببه البوابة لا الهندسة
+    import syllable_peel as S
+    S.ELIGIBILITY_GATE = False
+    try:
+        res = _cands('رَيۡبَۛ')
+        assert all(c['final_verdict'] == 'PENDING' for c in res)
+    finally:
+        S.ELIGIBILITY_GATE = True
+
+
+def test_kaf_of_tashbih_only_before_article():
+    # كَتَبَ: الكاف ليست قبل ال فتُرفض.
+    # كَٱلۡ...: لا حد مقطعي هنا حتى يُحسم أمر ٱ الصامتة بعد الحركة؛ لذلك لا نختبر حكمها بعد.
+    c = [c for c in _cands('كَتَبَ') if c['side'] == 'left' and c['detached_text'] == 'كَ'][0]
+    assert c['final_verdict'] == 'REJECTED' and c['reason'].startswith('NO_AFFIX_CLASS')
 
 
 def test_article_rule_only_for_exact_unit():
