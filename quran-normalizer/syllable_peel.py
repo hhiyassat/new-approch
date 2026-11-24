@@ -59,6 +59,7 @@ def propose(word):
         out.append(dict(
             candidate_id=f'{word}#article@solar', side='left', boundary_cell=None,
             source_cells=[cells[0].idx], left_syllables=[], right_syllables=[],
+            left_cells=[], right_cells=[cells[i].idx for i in range(1, n)], coverage_exceptions=cov_exc,
             detached_text=word[cells[0].span[0]:cells[0].span[1]],
             geometry_verdict='NO_SYLLABLE_BOUNDARY', geometry_reason='ٱ داخل مقطع ءَنْ',
             morphology_evidence='ال شمسية: اللام محذوفة وتحويلها مسجّل',
@@ -89,8 +90,12 @@ def propose(word):
             out.append(dict(
                 candidate_id=f'{word}#{side}@{cut}', side=side, boundary_cell=cut,
                 source_cells=[c.idx for c in detached],
-                left_syllables=[s['shape'] for s in sylls[:k + 1]] if side == 'left' else [s['shape'] for s in sylls[k + 1:]] ,
-                right_syllables=[s['shape'] for s in sylls[k + 1:]] if side == 'left' else [s['shape'] for s in sylls[:k + 1]],
+                # الطرفان بموضع الكلمة لا بحسب الجزء المرشح: اليسار قبل الحد واليمين بعده
+                left_syllables=[x['shape'] for x in sylls[:k + 1]],
+                right_syllables=[x['shape'] for x in sylls[k + 1:]],
+                left_cells=[c.idx for g in groups[:k + 1] for c in g],
+                right_cells=[c.idx for g in groups[k + 1:] for c in g],
+                coverage_exceptions=cov_exc,
                 detached_text=word[detached[0].span[0]:detached[-1].span[1]] if detached else '',
                 geometry_verdict=geo, geometry_reason=reason,
                 morphology_evidence=evidence, host_integrity=geo == 'OK' and bool(residual),

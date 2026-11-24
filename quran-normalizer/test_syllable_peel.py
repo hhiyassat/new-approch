@@ -39,6 +39,12 @@ def test_detached_part_candidates_are_independent():
     assert any(c['geometry_verdict'] == 'OK' for c in res) and any(c['geometry_verdict'] == 'OK' for c in res)
 
 
+def test_positional_sides_for_right_candidate():
+    # الطرف الأيسر دائمًا قبل الحد: لـ«هُ» يكون اليسار نَكْتُبُ والمرشح على اليمين
+    c = [c for c in _cands('نَكْتُبُهُ') if c['side'] == 'right' and c['detached_text'] == 'هُ'][0]
+    assert c['left_syllables'] == ['CVC', 'CV', 'CV'] and c['right_syllables'] == ['CV']
+
+
 def test_article_rule_only_for_exact_unit():
     # ٱلۡكِ ليست وحدة ال: لا ترخيص لها بالتعريف
     c = [c for c in _cands('ٱلۡكِتَٰبُ') if c['detached_text'] == 'ٱلۡكِ'][0]

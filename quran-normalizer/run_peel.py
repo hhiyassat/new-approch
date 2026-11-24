@@ -75,14 +75,23 @@ def main(argv):
                         sp = SP.propose(word)
                     except ValueError as e:
                         stats['cells_error'] += 1
+                        rows.append([s, ayah, pos, occ, word, 'SYLLABLE', 'ERROR', str(e)[:80], '', '', '', '',
+                                     '', '', '', '', '', ''])
+                        continue
+                    if not sp['candidates']:
+                        stats['no_candidate'] += 1
+                        rows.append([s, ayah, pos, occ, word, 'SYLLABLE', 'NO_CANDIDATE',
+                                     'لا حدود بين مقطعين', '', '', '', '', '', '', '', '', '', ''])
                         continue
                     for c in sp['candidates']:
                         stats[c['final_verdict']] += 1
                         rows.append([s, ayah, pos, occ, word, 'SYLLABLE', c['final_verdict'], c['reason'],
                                      c['candidate_id'], c['side'], c['detached_text'], c['geometry_verdict'],
-                                     ' '.join(c['left_syllables']), ' '.join(c['right_syllables'])])
-                    if not sp['candidates']:
-                        stats['no_candidate'] += 1
+                                     ' '.join(c['left_syllables']), ' '.join(c['right_syllables']),
+                                     ' '.join(str(i) for i in c['source_cells']),
+                                     ' '.join(str(i) for i in (c['left_cells'] + c['right_cells'])),
+                                     str(c['boundary_cell']) if c['boundary_cell'] is not None else '',
+                                     '; '.join(f"{e['char']}:{e['status']}" for e in c['coverage_exceptions'])])
                     continue
                 try:
                     cells = build_cells(word)
@@ -106,10 +115,14 @@ def main(argv):
                'الحدود', 'الوحدات', 'مقاطع_الطرف_الأيسر_للحد', 'مقاطع_الطرف_الأيمن_للحد', 'أصل_الشدة',
                'أصل_الساكن_الداخلي', 'تغطية_المصدر_الاستثناءات'] if method == 'peel' else
               ['سورة', 'آية', 'ترتيب_الكلمة_في_الآية', 'معرف_الوقوع', 'الكلمة', 'المسار', 'الحكم', 'السبب',
-               'معرف_المرشح', 'الجانب', 'الجزء_المفصول', 'الهندسة', 'مقاطع_اليسار', 'مقاطع_اليمين'])
+               'معرف_المرشح', 'الاتجاه', 'الجزء_المرشح', 'الهندسة', 'مقاطع_الطرف_الأيسر', 'مقاطع_الطرف_الأيمن',
+               'خلايا_الجزء_المرشح', 'خلايا_الباقي', 'الحد_عند_الخلية', 'تغطية_المصدر_الاستثناءات'])
     with open(os.path.join(out_dir, 'peel_words.tsv'), 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, delimiter='\t')
         w.writerow(header)
+        bad = [i for i, row in enumerate(rows) if len(row) != len(header)]
+        if bad:
+            raise SystemExit(f'عدم تطابق الأعمدة في {len(bad)} صفًا، أول صف: {bad[0]}')
         w.writerows(rows)
     lines = [f"{k}: {v}" for k, v in sorted(stats.items())]
     with open(os.path.join(out_dir, 'peel_summary.txt'), 'w', encoding='utf-8') as f:
