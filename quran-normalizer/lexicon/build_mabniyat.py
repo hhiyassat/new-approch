@@ -94,22 +94,38 @@ def rows_for(fname, field, domain):
 
 
 def main():
-    ok, review, seen = [], [], set()
+    allrows = []
     for fname, (field, domain) in sorted(SOURCES.items()):
-        for r in rows_for(fname, field, domain):
-            key = (r['skeleton'], r['domain'], r['status'])
-            if key in seen:
-                continue
-            seen.add(key)
-            (ok if r['status'] == 'OK' else review).append(r)
-    cols = ['headword', 'skeleton', 'words', 'domain', 'built', 'source', 'raw_field', 'raw_value', 'meaning', 'exhaustive', 'status']
+        allrows.extend(rows_for(fname, field, domain))
+    groups = {}
+    for r in allrows:
+        key = (r['skeleton'], r['domain'], r['status'])
+        g = groups.get(key)
+        if g is None:
+            groups[key] = dict(r, meanings=[r['meaning']] if r['meaning'] else [], sources=[r['source']],
+                               row_count=1)
+        else:
+            g['row_count'] += 1
+            if r['meaning'] and r['meaning'] not in g['meanings']:
+                g['meanings'].append(r['meaning'])
+            if r['source'] not in g['sources']:
+                g['sources'].append(r['source'])
+    ok, review = [], []
+    for g in groups.values():
+        g['meaning'] = ' | '.join(g['meanings'])
+        g['source'] = '; '.join(g['sources'])
+        g['raw_field'] = ''
+        g['raw_value'] = ''
+        (ok if g['status'] == 'OK' else review).append(g)
+    ok.sort(key=lambda r: (r['domain'], r['skeleton']))
+    review.sort(key=lambda r: (r['domain'], r['skeleton']))
+    cols = ['headword', 'skeleton', 'words', 'domain', 'built', 'source', 'row_count', 'meaning',
+            'exhaustive', 'status']
     for path, rows in [(os.path.join(HERE, 'mabniyat.tsv'), ok), (os.path.join(HERE, 'mabniyat_review.tsv'), review)]:
         with open(path, 'w', encoding='utf-8', newline='') as f:
             w = csv.DictWriter(f, fieldnames=cols, delimiter='\t', extrasaction='ignore')
             w.writeheader(); w.writerows(rows)
     print(f'OK={len(ok)} review={len(review)}')
-    from collections import Counter
-    print(Counter(r['status'] for r in review))
 
 
 if __name__ == '__main__':

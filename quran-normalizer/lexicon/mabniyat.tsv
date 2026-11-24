@@ -1,256 +1,256 @@
-headword	skeleton	words	domain	built	source	raw_field	raw_value	meaning	exhaustive	status
-حَيْثُ	حيث	1	ظرف	مبني	built_in_adverbs.json	adverb	حَيْثُ		false	OK
-مُنْذُ	منذ	1	ظرف	مبني	built_in_adverbs.json	adverb	مُنْذُ		false	OK
-قَطُّ	قط	1	ظرف	مبني	built_in_adverbs.json	adverb	قَطُّ		false	OK
-الْآنَ	الان	1	ظرف	مبني	built_in_adverbs.json	adverb	الْآنَ		false	OK
-غَدًا	غدا	1	ظرف	مبني	built_in_adverbs.json	adverb	غَدًا		false	OK
-اَلَّلَيْلَةَ	الليلة	1	ظرف	مبني	built_in_adverbs.json	adverb	اَلَّلَيْلَةَ		false	OK
-أَيَّانَ	ايان	1	ظرف	مبني	built_in_adverbs.json	adverb	أَيَّانَ		false	OK
-هُنَاكَ	هناك	1	ظرف	مبني	built_in_adverbs.json	adverb	هُنَاكَ		false	OK
-هُنَالِكَ	هنالك	1	ظرف	مبني	built_in_adverbs.json	adverb	هُنَالِكَ		false	OK
-ثَمَّ	ثم	1	ظرف	مبني	built_in_adverbs.json	adverb	ثَمَّ		false	OK
-ثََمََّةَ	ثمة	1	ظرف	مبني	built_in_adverbs.json	adverb	ثََمََّةَ		false	OK
-إِذْ	اذ	1	ظرف	مبني	built_in_adverbs.json	adverb	إِذْ		false	OK
-مُذْ	مذ	1	ظرف	مبني	built_in_adverbs.json	adverb	مُذْ		false	OK
-لَدَى	لدى	1	ظرف	مبني	built_in_adverbs.json	adverb	لَدَى		false	OK
-عِوَضُ	عوض	1	ظرف	مبني	built_in_adverbs.json	adverb	عِوَضُ		false	OK
-أَيْنَ	اين	1	ظرف	مبني	built_in_adverbs.json	adverb	أَيْنَ		false	OK
-مَتَى	متى	1	ظرف	مبني	built_in_adverbs.json	adverb	مَتَى		false	OK
-هُنَا	هنا	1	ظرف	مبني	built_in_adverbs.json	adverb	هُنَا		false	OK
-أَنَّى	انى	1	ظرف	مبني	built_in_adverbs.json	adverb	أَنَّى		false	OK
-إِذَا	اذا	1	ظرف	مبني	built_in_adverbs.json	adverb	إِذَا		false	OK
-إِنْ	ان	1	شرط	مبني	conditional_letters_tools.json	particle	إِنْ	إِنْ	false	OK
-إِذْمَا	اذما	1	شرط	مبني	conditional_letters_tools.json	particle	إِذْمَا	إِذْمَا	false	OK
-لَوْ	لو	1	شرط	مبني	conditional_letters_tools.json	particle	لَوْ	لَوْ	false	OK
-لَوْلَا	لولا	1	شرط	مبني	conditional_letters_tools.json	particle	لَوْلَا	لَوْلَا	false	OK
-لَوْمَا	لوما	1	شرط	مبني	conditional_letters_tools.json	particle	لَوْمَا	لَوْمَا	false	OK
-أَمَّا	اما	1	شرط	مبني	conditional_letters_tools.json	particle	أَمَّا	أَمَّا	false	OK
-أَيْنَ	اين	1	شرط	مبني	conditional_letters_tools.json	particle	أَيْنَ	أَيْنَ	false	OK
-أَيْنَمَا	اينما	1	شرط	مبني	conditional_letters_tools.json	particle	أَيْنَمَا	أَيْنَمَا	false	OK
-كَيْفَمَا	كيفما	1	شرط	مبني	conditional_letters_tools.json	particle	كَيْفَمَا	كَيْفَمَا	false	OK
-مَتَى	متى	1	شرط	مبني	conditional_letters_tools.json	particle	مَتَى	مَتَى	false	OK
-مَتَى مَا	متىما	2	شرط	مبني	conditional_letters_tools.json	particle	مَتَى مَا	مَتَى مَا	false	OK
-حَيْثُمَا	حيثما	1	شرط	مبني	conditional_letters_tools.json	particle	حَيْثُمَا	حَيْثُمَا	false	OK
-أَنَّى	انى	1	شرط	مبني	conditional_letters_tools.json	particle	أَنَّى	أَنَّى	false	OK
-مَهْمَا	مهما	1	شرط	مبني	conditional_letters_tools.json	particle	مَهْمَا	مَهْمَا	false	OK
-إِذَا	اذا	1	شرط	مبني	conditional_letters_tools.json	particle	إِذَا	إِذَا	false	OK
-كُلَّمَا	كلما	1	شرط	مبني	conditional_letters_tools.json	particle	كُلَّمَا	كُلَّمَا	false	OK
-مَا	ما	1	شرط	مبني	conditional_letters_tools.json	particle	مَا	مَا	false	OK
-لَمَّا	لما	1	شرط	مبني	conditional_letters_tools.json	particle	لَمَّا	لَمَّا	false	OK
-مَنْ	من	1	شرط	مبني	conditional_letters_tools.json	particle	مَنْ	مَنْ	false	OK
-أَيَّ	اي	1	شرط	مبني	conditional_letters_tools.json	particle	أَيَّ	أَيَّ	false	OK
-وَ	و	1	عطف	مبني	coordinating_conjunctions.json	letter	وَ		false	OK
-فَ	ف	1	عطف	مبني	coordinating_conjunctions.json	letter	فَ		false	OK
-ثُمَّ	ثم	1	عطف	مبني	coordinating_conjunctions.json	letter	ثُمَّ		false	OK
-حَتَّى	حتى	1	عطف	مبني	coordinating_conjunctions.json	letter	حَتَّى		false	OK
-أَوْ	او	1	عطف	مبني	coordinating_conjunctions.json	letter	أَوْ		false	OK
-أَمْ	ام	1	عطف	مبني	coordinating_conjunctions.json	letter	أَمْ		false	OK
-بَلْ	بل	1	عطف	مبني	coordinating_conjunctions.json	letter	بَلْ		false	OK
-لَكِنْ	لكن	1	عطف	مبني	coordinating_conjunctions.json	letter	لَكِنْ		false	OK
-لَا	لا	1	عطف	مبني	coordinating_conjunctions.json	letter	لَا		false	OK
-إِمَّا	اما	1	عطف	مبني	coordinating_conjunctions.json	letter	إِمَّا		false	OK
-إِنَّ	ان	1	نواسخ	مبني	copulative_particle.json	copulative_particle	إِنَّ		false	OK
-كَأَنَّ	كان	1	نواسخ	مبني	copulative_particle.json	copulative_particle	كَأَنَّ		false	OK
-لَكِنَّ	لكن	1	نواسخ	مبني	copulative_particle.json	copulative_particle	لَكِنَّ		false	OK
-لَيْتَ	ليت	1	نواسخ	مبني	copulative_particle.json	copulative_particle	لَيْتَ		false	OK
-لَعَلَّ	لعل	1	نواسخ	مبني	copulative_particle.json	copulative_particle	لَعَلَّ		false	OK
-لَا	لا	1	نواسخ	مبني	copulative_particle.json	copulative_particle	لَا		false	OK
-هَذَا	هذا	1	إشارة	مبني	demonstrative_pronouns.json	name	هَذَا		false	OK
-هَذِهِ	هذه	1	إشارة	مبني	demonstrative_pronouns.json	name	هَذِهِ		false	OK
-هَذِي	هذي	1	إشارة	مبني	demonstrative_pronouns.json	name	هَذِي		false	OK
-هَاهُنَا	هاهنا	1	إشارة	مبني	demonstrative_pronouns.json	name	هَاهُنَا		false	OK
-ذَاكَ	ذاك	1	إشارة	مبني	demonstrative_pronouns.json	name	ذَاكَ		false	OK
-تِلْكَ	تلك	1	إشارة	مبني	demonstrative_pronouns.json	name	تِلْكَ		false	OK
-تِيكَ	تيك	1	إشارة	مبني	demonstrative_pronouns.json	name	تِيكَ		false	OK
-تَانِكَ	تانك	1	إشارة	مبني	demonstrative_pronouns.json	name	تَانِكَ		false	OK
-ذَلِكَ	ذلك	1	إشارة	مبني	demonstrative_pronouns.json	name	ذَلِكَ		false	OK
-ذَانِكَ	ذانك	1	إشارة	مبني	demonstrative_pronouns.json	name	ذَانِكَ		false	OK
-هُنَا	هنا	1	إشارة	مبني	demonstrative_pronouns.json	name	هُنَا		false	OK
-هُنَالِكَ	هنالك	1	إشارة	مبني	demonstrative_pronouns.json	name	هُنَالِكَ		false	OK
-هَؤُلَاءِ	هؤلاء	1	إشارة	مبني	demonstrative_pronouns.json	name	هَؤُلَاءِ		false	OK
-أُولَئِكَ	اولئك	1	إشارة	مبني	demonstrative_pronouns.json	name	أُولَئِكَ		false	OK
-هَذَانِ	هذان	1	إشارة	مبني	demonstrative_pronouns.json	name	هَذَانِ - هَذَيْنِ		false	OK
-هَذَيْنِ	هذين	1	إشارة	مبني	demonstrative_pronouns.json	name	هَذَانِ - هَذَيْنِ		false	OK
-هَاتَانِ	هاتان	1	إشارة	مبني	demonstrative_pronouns.json	name	هَاتَانِ - هَاتَيْنِ		false	OK
-هَاتَيْنِ	هاتين	1	إشارة	مبني	demonstrative_pronouns.json	name	هَاتَانِ - هَاتَيْنِ		false	OK
-هُنَاكَ	هناك	1	إشارة	مبني	demonstrative_pronouns.json	name	هُنَاكَ		false	OK
-أُوْلَاءِ	اولاء	1	إشارة	مبني	demonstrative_pronouns.json	name	أُوْلَاءِ		false	OK
-ثَمََّ	ثم	1	إشارة	مبني	demonstrative_pronouns.json	name	ثَمََّ		false	OK
-ثَمَّةَ	ثمة	1	إشارة	مبني	demonstrative_pronouns.json	name	ثَمَّةَ		false	OK
-ذَا	ذا	1	إشارة	مبني	demonstrative_pronouns.json	name	ذَا		false	OK
-ذِهِ	ذه	1	إشارة	مبني	demonstrative_pronouns.json	name	ذِهِ		false	OK
-ذَيْنِ	ذين	1	إشارة	مبني	demonstrative_pronouns.json	name	ذَيْنِ		false	OK
-أُولَالِكَ	اولالك	1	إشارة	مبني	demonstrative_pronouns.json	name	أُولَالِكَ		false	OK
-ثَمََّتَ	ثمت	1	إشارة	مبني	demonstrative_pronouns.json	name	ثَمََّتَ		false	OK
-أُولَاءِكَ	اولاءك	1	إشارة	مبني	demonstrative_pronouns.json	name	أُولَاءِكَ		false	OK
-أُولَئِكُمْ	اولئكم	1	إشارة	مبني	demonstrative_pronouns.json	name	أُولَئِكُمْ		false	OK
-تِلْكُمُ	تلكم	1	إشارة	مبني	demonstrative_pronouns.json	name	تِلْكُمُ		false	OK
-أُولَاءِكُمْ	اولاءكم	1	إشارة	مبني	demonstrative_pronouns.json	name	أُولَاءِكُمْ		false	OK
-تِهِ	ته	1	إشارة	مبني	demonstrative_pronouns.json	name	تِهِ		false	OK
-للجمع	للجمع	1	ضمير مستتر	مبني	hidden_pronouns.json	form	للجمع		false	OK
-هَلْ	هل	1	استفهام	مبني	interrogative_letters_tools.json	tool	هَلْ	هَلْ	false	OK
-أَ	ا	1	استفهام	مبني	interrogative_letters_tools.json	tool	أَ	أَ	false	OK
-لَمْ	لم	1	جزم	مبني	jazm_tools.json	tool	لَمْ	هي حرفٌ يُفيد نفي الفعل المضارع في الزّمنِ الماضي و ينقل الدّلالة من المضارع إلى الماضي	false	OK
-لَمَّا	لما	1	جزم	مبني	jazm_tools.json	tool	لَمَّا	هي حرفٌ يُفيد نفي الفعل المضارع في الزّمنِ الماضي و ينقل الدّلالة من المضارع إلى الماضي   و يربطههُ مع زمن المُتكلّم	false	OK
-لِ	ل	1	جزم	مبني	jazm_tools.json	tool	لِ	(لَامُ الْأمْرِ ) هي حرفٌ يدخلُ على الفعل المضارع، وتشيرُ إلى الطّلب وتنقل الدلالة من المضارع إلى الأمر ( الطلب )	false	OK
-لَا اَلنَّاهِيَة	لاالناهية	2	جزم	مبني	jazm_tools.json	tool	لَا اَلنَّاهِيَة	هي حرفٌ نهي يدخلُ على الفعل المضارع وبجزمه	false	OK
-إِنْ	ان	1	جزم	مبني	jazm_tools.json	tool	إِنْ	هي حرف شرط  يفيد الربط بين الشرط وجوابه و يجزم فعلين مضارعين الأول فعل الشرط والثاني جواب الشرط	false	OK
-إِذْمَا	اذما	1	جزم	مبني	jazm_tools.json	tool	إِذْمَا	هي حرف يفيد الربط بين الشرط وجوابه	false	OK
-مَنْ	من	1	جزم	مبني	jazm_tools.json	tool	مَنْ	اسم شرط للعاقل	false	OK
-مَا	ما	1	جزم	مبني	jazm_tools.json	tool	مَا	اسم شرط لغير العاقل.	false	OK
-مَهْمَا	مهما	1	جزم	مبني	jazm_tools.json	tool	مَهْمَا	اسم شرط لغير العاقل.	false	OK
-مَتَى	متى	1	جزم	مبني	jazm_tools.json	tool	مَتَى	اسم شرط للزمان	false	OK
-أَيَّانَ	ايان	1	جزم	مبني	jazm_tools.json	tool	أَيَّانَ	اسم شرط للزمان	false	OK
-أَيْنَ	اين	1	جزم	مبني	jazm_tools.json	tool	أَيْنَ	اسم شرط للمكان.	false	OK
-حَيْثُمَا	حيثما	1	جزم	مبني	jazm_tools.json	tool	حَيْثُمَا	اسم شرط للمكان.	false	OK
-أَنَّى	انى	1	جزم	مبني	jazm_tools.json	tool	أَنَّى	اسم شرط للمكان.	false	OK
-أَيُّ	اي	1	جزم	مبني	jazm_tools.json	tool	أَيُّ	اسم شرط للعاقل؛لأنَّ المضاف إليه عاقل	false	OK
-أَيْنَمَا	اينما	1	جزم	مبني	jazm_tools.json	tool	أَيْنَمَا	اسم شرط للمكان.	false	OK
-كَيْفَمَا	كيفما	1	جزم	مبني	jazm_tools.json	tool	كَيْفَمَا	تفيد الحال	false	OK
-كَمْ	كم	1	كناية	مبني	kinaya_names.json	name	كَمْ		false	OK
-كَأَيِّنْ	كاين	1	كناية	مبني	kinaya_names.json	name	كَأَيِّنْ		false	OK
-كََائِنْ	كائن	1	كناية	مبني	kinaya_names.json	name	كََائِنْ		false	OK
-كَذَا	كذا	1	كناية	مبني	kinaya_names.json	name	كَذَا		false	OK
-كَيْتَ	كيت	1	كناية	مبني	kinaya_names.json	name	كَيْتَ		false	OK
-ذَيْتَ	ذيت	1	كناية	مبني	kinaya_names.json	name	ذَيْتَ		false	OK
-بِضْع	بضع	1	كناية	مبني	kinaya_names.json	name	بِضْع		false	OK
-نَعَمْ	نعم	1	جواب	مبني	letters_answers.json	particle	نَعَمْ	لتصديق المخبر أو الإعلام المستفهم أو وعد طالب	false	OK
-بَلَى	بلى	1	جواب	مبني	letters_answers.json	particle	بَلَى	تنقض النفي المتقدم وتؤكد الإيجاب	false	OK
-أَجَلْ	اجل	1	جواب	مبني	letters_answers.json	particle	أَجَلْ	لتصديق الخبر أو تحقيق الطلب	false	OK
-إِنَّ	ان	1	جواب	مبني	letters_answers.json	particle	إِنَّ	تستخدم لتصديق الخبر	false	OK
-إِيْ	اي	1	جواب	مبني	letters_answers.json	particle	إِيْ	يستخدم للإجابة على الاستفهام والتأكيد	false	OK
-كَلَّا	كلا	1	جواب	مبني	letters_answers.json	particle	كَلَّا	يستخدم لنفي الجملة المنفية بشكل قاطع.	false	OK
-بَجَلْ	بجل	1	جواب	مبني	letters_answers.json	particle	بَجَلْ	يستخدم في سياقات خاصة مع النفي الشديد	false	OK
-بِ	ب	1	حرف جر	مبني	preposition_meanings.json	preposition	بِ	*الإلصاق حقيقياً	false	OK
-تَ	ت	1	حرف جر	مبني	preposition_meanings.json	preposition	تَ	"تختص التاء ( تَاءُ الْقَسَمِ ) بثلاث كلمات هي: ""تالله، تربَ الكعبة، تربيِّ"" فهي أقل حروف الجر استعمالاً."	false	OK
-وَ	و	1	حرف جر	مبني	preposition_meanings.json	preposition	وَ	"*أما الواو ( وَاوُ الْقَسَمِ) فتدخل على مقسم به ظاهر مثل: ""والله وفي القرآن مثل:﴿وَالشَّمْسِ وَضُحَاهَا﴾"	false	OK
-كَ	ك	1	حرف جر	مبني	preposition_meanings.json	preposition	كَ	* غالباً تأتي بمعنى (التشبيه)	false	OK
-عَنْ	عن	1	حرف جر	مبني	preposition_meanings.json	preposition	عَنْ	المجاوزة والبعد	false	OK
-فِي	في	1	حرف جر	مبني	preposition_meanings.json	preposition	فِي ْ	الظرفية حقيقة	false	OK
-مُذْ	مذ	1	حرف جر	مبني	preposition_meanings.json	preposition	مُذْ وَ مُنْذُ	* تكونان حرفي جر تفيدان ابتداء الغاية إن كان الزمان ماضياً	false	OK
-مُنْذُ	منذ	1	حرف جر	مبني	preposition_meanings.json	preposition	مُذْ وَ مُنْذُ	* تكونان حرفي جر تفيدان ابتداء الغاية إن كان الزمان ماضياً	false	OK
-لِ	ل	1	حرف جر	مبني	preposition_meanings.json	preposition	لِ	* الاختصاص	false	OK
-مِنَ	من	1	حرف جر	مبني	preposition_meanings.json	preposition	مِنَ	* معناها العام: ابتداء الغاية	false	OK
-إِلَى	الى	1	حرف جر	مبني	preposition_meanings.json	preposition	إِلَى	* انتهاء الغاية الزمانية أو المكانية	false	OK
-رُبَّ	رب	1	حرف جر	مبني	preposition_meanings.json	preposition	رُبَّ	* التكثير	false	OK
-عَلَى	على	1	حرف جر	مبني	preposition_meanings.json	preposition	عَلَى	* معناها العام الاستعلاء حقيقياً	false	OK
-حَتَّى	حتى	1	حرف جر	مبني	preposition_meanings.json	preposition	حَتَّى	* انتهاء الغاية ( الزمانية والمكانية )	false	OK
-خَلَا	خلا	1	حرف جر	مبني	preposition_meanings.json	preposition	خَلَا	تعني الاستثناء	false	OK
-عَدَا	عدا	1	حرف جر	مبني	preposition_meanings.json	preposition	عَدَا	تعني الاستثناء	false	OK
-حَاشَا	حاشا	1	حرف جر	مبني	preposition_meanings.json	preposition	حَاشَا	تعني الاستثناء	false	OK
-أََنْ	ان	1	نصب	مبني	present_naseb_tools.json	tool	أََنْ	أََنْ	false	OK
-لَنْ	لن	1	نصب	مبني	present_naseb_tools.json	tool	لَنْ	لَنْ	false	OK
-إِذَنْ	اذن	1	نصب	مبني	present_naseb_tools.json	tool	إِذَنْ	إِذَنْ	false	OK
-كَيْ	كي	1	نصب	مبني	present_naseb_tools.json	tool	كَيْ	كَيْ	false	OK
-لِ	ل	1	نصب	مبني	present_naseb_tools.json	tool	لِ	لِ	false	OK
-حَتَّى	حتى	1	نصب	مبني	present_naseb_tools.json	tool	حَتَّى	حَتَّى	false	OK
-فَ	ف	1	نصب	مبني	present_naseb_tools.json	tool	فَ	فَ	false	OK
-وَ	و	1	نصب	مبني	present_naseb_tools.json	tool	وَ	وَ	false	OK
-أَوْ	او	1	نصب	مبني	present_naseb_tools.json	tool	أَوْ	أَوْ	false	OK
-أَنَا	انا	1	ضمير	مبني	pronouns_classification.json	pronoun	أَنَا	المتكلم	false	OK
-نَحْنُ	نحن	1	ضمير	مبني	pronouns_classification.json	pronoun	نَحْنُ	المتكلم	false	OK
-أَنْتَ	انت	1	ضمير	مبني	pronouns_classification.json	pronoun	أَنْتَ	المخاطب	false	OK
-أَنْتُمَا	انتما	1	ضمير	مبني	pronouns_classification.json	pronoun	أَنْتُمَا	المخاطب	false	OK
-أَنْتُمْ	انتم	1	ضمير	مبني	pronouns_classification.json	pronoun	أَنْتُمْ	المخاطب	false	OK
-أَنْتُنَّ	انتن	1	ضمير	مبني	pronouns_classification.json	pronoun	أَنْتُنَّ	المخاطب	false	OK
-هُوَ	هو	1	ضمير	مبني	pronouns_classification.json	pronoun	هُوَ	الغائب	false	OK
-هِيَ	هي	1	ضمير	مبني	pronouns_classification.json	pronoun	هِيَ	الغائب	false	OK
-هُمَا	هما	1	ضمير	مبني	pronouns_classification.json	pronoun	هُمَا	الغائب	false	OK
-هُمْ	هم	1	ضمير	مبني	pronouns_classification.json	pronoun	هُمْ	الغائب	false	OK
-هُنَّ	هن	1	ضمير	مبني	pronouns_classification.json	pronoun	هُنَّ	الغائب	false	OK
-إِيَّايَ	اياي	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّايَ	المتكلم	false	OK
-إِيَّانَا	ايانا	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّانَا	المتكلم	false	OK
-إِيَّاكَ	اياك	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاكَ	المخاطب	false	OK
-إِيَّاكُمَا	اياكما	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاكُمَا	المخاطب	false	OK
-إِيَّاكُمْ	اياكم	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاكُمْ	المخاطب	false	OK
-إِيَّاكُنَّ	اياكن	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاكُنَّ	المخاطب	false	OK
-إِيَّاهُ	اياه	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاهُ	الغائب	false	OK
-إِيَّاهَا	اياها	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاهَا	الغائب	false	OK
-إِيَّاهُمَا	اياهما	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاهُمَا	الغائب	false	OK
-إِيَّاهُنَّ	اياهن	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاهُنَّ	الغائب	false	OK
-نَصْبٌ	نصب	1	ضمير	مبني	pronouns_classification.json	pronoun	نَا – كَضَمِيرٍ مُشْتَرَكٍ (رَفْعٌ - نَصْبٌ - جَرّ	المتكلم	false	OK
-جَرّ	جر	1	ضمير	مبني	pronouns_classification.json	pronoun	نَا – كَضَمِيرٍ مُشْتَرَكٍ (رَفْعٌ - نَصْبٌ - جَرّ	المتكلم	false	OK
-كُمْ	كم	1	ضمير	مبني	pronouns_classification.json	pronoun	كُمْ	المخاطب	false	OK
-إِيَّاهُمْ	اياهم	1	ضمير	مبني	pronouns_classification.json	pronoun	إِيَّاهُمْ	الغائب	false	OK
-الَّذِي	الذي	1	موصول	مبني	relative_pronouns.json	name	الَّذِي		false	OK
-الَّتِي	التي	1	موصول	مبني	relative_pronouns.json	name	الَّتِي		false	OK
-مَنْ	من	1	موصول	مبني	relative_pronouns.json	name	مَنْ		false	OK
-الَّلَذَانِ	اللذان	1	موصول	مبني	relative_pronouns.json	name	الَّلَذَانِ		false	OK
-الَّلَتَانِ	اللتان	1	موصول	مبني	relative_pronouns.json	name	الَّلَتَانِ		false	OK
-الَلَّذَيْنِ	اللذين	1	موصول	مبني	relative_pronouns.json	name	الَلَّذَيْنِ		false	OK
-الَّلَتَيْنِ	اللتين	1	موصول	مبني	relative_pronouns.json	name	الَّلَتَيْنِ		false	OK
-الَّذِيْنَ	الذين	1	موصول	مبني	relative_pronouns.json	name	الَّذِيْنَ		false	OK
-الَّلَاْتِيْ	اللاتي	1	موصول	مبني	relative_pronouns.json	name	الَّلَاْتِيْ		false	OK
-اَلَّلَاْئِيْ	اللائي	1	موصول	مبني	relative_pronouns.json	name	اَلَّلَاْئِيْ		false	OK
-مَا	ما	1	موصول	مبني	relative_pronouns.json	name	مَا		false	OK
-ذَاْ	ذا	1	موصول	مبني	relative_pronouns.json	name	ذَاْ		false	OK
-أَيّ	اي	1	موصول	مبني	relative_pronouns.json	name	أَيّ		false	OK
-ذُو	ذو	1	موصول	مبني	relative_pronouns.json	name	ذُو		false	OK
-الْأُلَى	الالى	1	موصول	مبني	relative_pronouns.json	name	الْأُلَى		false	OK
-أَلْ	ال	1	موصول	مبني	relative_pronouns.json	name	أَلْ		false	OK
-آمِينَ	امين	1	اسم فعل	مبني	verb_name.json	name	آمِينَ	استجب أو استمع	false	OK
-حَيَّ	حي	1	اسم فعل	مبني	verb_name.json	name	حَيَّ	أقبل	false	OK
-هَيَّا	هيا	1	اسم فعل	مبني	verb_name.json	name	هَيَّا	أسرع	false	OK
-هِيتَ	هيت	1	اسم فعل	مبني	verb_name.json	name	هِيتَ	أسرع أو أقبل	false	OK
-هَلُمَّ إِلَى	هلمالى	2	اسم فعل	مبني	verb_name.json	name	هَلُمَّ إِلَى	تعال أو أقبل	false	OK
-هَلُمَّ كَذَا	هلمكذا	2	اسم فعل	مبني	verb_name.json	name	هَلُمَّ كَذَا	أحضر	false	OK
-هَاؤُمُ	هاؤم	1	اسم فعل	مبني	verb_name.json	name	هَاؤُمُ	خذوا	false	OK
-صَهْ	صه	1	اسم فعل	مبني	verb_name.json	name	صَهْ	اسكت	false	OK
-إِيهِ	ايه	1	اسم فعل	مبني	verb_name.json	name	إِيهِ	زدني من الحديث أو امضِ	false	OK
-مِهْ	مه	1	اسم فعل	مبني	verb_name.json	name	مِهْ	كف أو اكفف أو انكفف	false	OK
-رُوَيْدَكَ	رويدك	1	اسم فعل	مبني	verb_name.json	name	رُوَيْدَكَ	تمهل أو أمهل	false	OK
-بَلْهَ	بله	1	اسم فعل	مبني	verb_name.json	name	بَلْهَ	اترك أو دع	false	OK
-هَاكُمْ	هاكم	1	اسم فعل	مبني	verb_name.json	name	هَاكُمْ	خذ أو تناول	false	OK
-دُونَكَ	دونك	1	اسم فعل	مبني	verb_name.json	name	دُونَكَ	خذ	false	OK
-حِسَّ	حس	1	اسم فعل	مبني	verb_name.json	name	حِسَّ	أَتأَلَّم	false	OK
-تِيدَ	تيد	1	اسم فعل	مبني	verb_name.json	name	تِيدَ	رويد أو اتئد	false	OK
-هِيهَلَا	هيهلا	1	اسم فعل	مبني	verb_name.json	name	هِيهَلَا	ائت أو أقدم	false	OK
-حُدَيَّاكَ	حدياك	1	اسم فعل	مبني	verb_name.json	name	حُدَيَّاكَ	اُبرُز	false	OK
-النَّجَاءَكَ	النجاءك	1	اسم فعل	مبني	verb_name.json	name	النَّجَاءَكَ	أسرع	false	OK
-إِيهَا	ايها	1	اسم فعل	مبني	verb_name.json	name	إِيهَا	كف أو ابتعد	false	OK
-فِدَاءَ	فداء	1	اسم فعل	مبني	verb_name.json	name	فِدَاءَ	ليفْدِك	false	OK
-قَدْكَ	قدك	1	اسم فعل	مبني	verb_name.json	name	قَدْكَ	اكتف	false	OK
-كَذَاكَ	كذاك	1	اسم فعل	مبني	verb_name.json	name	كَذَاكَ	أمسك	false	OK
-هَدَادِيكَ	هداديك	1	اسم فعل	مبني	verb_name.json	name	هَدَادِيكَ	مهلًا بعد مهل	false	OK
-لَدَيْكَ	لديك	1	اسم فعل	مبني	verb_name.json	name	لَدَيْكَ	خذ	false	OK
-عِنْدَكَ	عندك	1	اسم فعل	مبني	verb_name.json	name	عِنْدَكَ	خذ	false	OK
-وَيْهَا	ويها	1	اسم فعل	مبني	verb_name.json	name	وَيْهَا / وَيْهَ	أغر أو حرّض	false	OK
-وَيْهَ	ويه	1	اسم فعل	مبني	verb_name.json	name	وَيْهَا / وَيْهَ	أغر أو حرّض	false	OK
-وَرَاءَكَ	وراءك	1	اسم فعل	مبني	verb_name.json	name	وَرَاءَكَ	تأخر	false	OK
-إِلَيْكَ	اليك	1	اسم فعل	مبني	verb_name.json	name	إِلَيْكَ	خذ	false	OK
-إِلَيْكَ عَنْ	اليكعن	2	اسم فعل	مبني	verb_name.json	name	إِلَيْكَ عَنْ	ابتعد أو تنحَّ	false	OK
-إِلَيَّ	الي	1	اسم فعل	مبني	verb_name.json	name	إِلَيَّ	أقبل أو عجّل	false	OK
-عَلَيْكَ	عليك	1	اسم فعل	مبني	verb_name.json	name	عَلَيْكَ	الزم أو تمسك بـ	false	OK
-مَكَانَكَ	مكانك	1	اسم فعل	مبني	verb_name.json	name	مَكَانَكَ	اثبت	false	OK
-أَمَامَكَ	امامك	1	اسم فعل	مبني	verb_name.json	name	أَمَامَكَ	تقدم	false	OK
-حَذَارِ	حذار	1	اسم فعل	مبني	verb_name.json	name	حَذَارِ	احذر	false	OK
-نِزَالِ	نزال	1	اسم فعل	مبني	verb_name.json	name	نِزَالِ	انزل	false	OK
-هَيْهَاتَ	هيهات	1	اسم فعل	مبني	verb_name.json	name	هَيْهَاتَ	بعد	false	OK
-بُطْآنَ	بطان	1	اسم فعل	مبني	verb_name.json	name	بُطْآنَ	بطئ أو أبطأ	false	OK
-شَتَّانَ	شتان	1	اسم فعل	مبني	verb_name.json	name	شَتَّانَ	بعد أو افترق	false	OK
-سُرْعَانَ	سرعان	1	اسم فعل	مبني	verb_name.json	name	سُرْعَانَ	سرع أو أسرع	false	OK
-وَشْكَانَ	وشكان	1	اسم فعل	مبني	verb_name.json	name	وَشْكَانَ	سرع أو أسرع	false	OK
-دُهْدُرَّيْنَ	دهدرين	1	اسم فعل	مبني	verb_name.json	name	دُهْدُرَّيْنَ	بَطُلَ	false	OK
-قَدْ	قد	1	اسم فعل	مبني	verb_name.json	name	قَدْ	كفى أو يكفي	false	OK
-حَسْبُكَ	حسبك	1	اسم فعل	مبني	verb_name.json	name	حَسْبُكَ	كفى/كفاك أو يكفي/يكفيك	false	OK
-بَجْلُ	بجل	1	اسم فعل	مبني	verb_name.json	name	بَجْلُ	يكفي	false	OK
-أُفٍّ	اف	1	اسم فعل	مبني	verb_name.json	name	أُفٍّ	أتضجر	false	OK
-وَيْ	وي	1	اسم فعل	مبني	verb_name.json	name	وَيْ	أتعجب أو أعجب	false	OK
-وَاهًا	واها	1	اسم فعل	مبني	verb_name.json	name	وَاهًا	أتعجب أو أتلهف	false	OK
-آهٍ	اه	1	اسم فعل	مبني	verb_name.json	name	آهٍ	أتوجع أو أشكو	false	OK
-أَوَاهُ	اواه	1	اسم فعل	مبني	verb_name.json	name	أَوَاهُ	أتوجع أو أشكو	false	OK
-قَطُّ	قط	1	اسم فعل	مبني	verb_name.json	name	قَطُّ	يكفي	false	OK
-بَخٍ	بخ	1	اسم فعل	مبني	verb_name.json	name	بَخٍ	أستحسن أو أعجب	false	OK
-زُهْ	زه	1	اسم فعل	مبني	verb_name.json	name	زُهْ	أَسْتَحْسِنَ	false	OK
-أَخْ	اخ	1	اسم فعل	مبني	verb_name.json	name	أَخْ	أتألم أو أتكره	false	OK
-هَاكَ	هاك	1	اسم فعل	مبني	verb_name.json	name	هَاكَ	خذ أو تناول	false	OK
-قَطُّكَ	قطك	1	اسم فعل	مبني	verb_name.json	name	قَطُّكَ	أمسك	false	OK
-رُوَيْدَ	رويد	1	اسم فعل	مبني	verb_name.json	name	رُوَيْدَ	أَمْهِلْ	false	OK
-هَاءَ	هاء	1	اسم فعل	مبني	verb_name.json	name	هَاءَ	خُذْ	false	OK
-حَيَّهَلَ	حيهل	1	اسم فعل	مبني	verb_name.json	name	حَيَّهَلَ	أَقْبِلْ أو أَسْرِعْ	false	OK
-يَا	يا	1	نداء	مبني	vocative_particles.json	particle	يَا	وهي الأكثَرُ استعمالًا، وهي أمُّ البابِ، وهي لنداءِ البعيدِ حقيقةً	false	OK
-أَيَا	ايا	1	نداء	مبني	vocative_particles.json	particle	أَيَا	نداء الشخص أو الشيء البعيد مكانيًا أو معنويًا	false	OK
-هَيَا	هيا	1	نداء	مبني	vocative_particles.json	particle	هَيَا	وأصلُها (أَيا). يُنادى بها البعيدُ مسافةً أو حُكمًا .	false	OK
-أَيْ	اي	1	نداء	مبني	vocative_particles.json	particle	أَيْ	وهي لنِداءِ البَعيدِ. وقيل: للقَريبِ كالهَمزةِ، وقيل: للمُتَوسِّطِ. وقد تُمَدُّ، فيُقالُ: (آيْ)	false	OK
-وَا	وا	1	نداء	مبني	vocative_particles.json	particle	وَا	لا تُستعمَلُ إلَّا في النُّدبةِ، وتختصُّ بنداءِ المندوب، وهو المتفجَّعُ عليه	false	OK
-آ	ا	1	نداء	مبني	vocative_particles.json	particle	آ	حرفُ نِداءٍ للبَعيدِ، أو ما هو نظيرُه، كالنَّائِمِ والغافِلِ	false	OK
+headword	skeleton	words	domain	built	source	row_count	meaning	exhaustive	status
+أُولَئِكَ	اولئك	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+أُولَئِكُمْ	اولئكم	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+أُوْلَاءِ	اولاء	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+أُولَاءِكَ	اولاءك	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+أُولَاءِكُمْ	اولاءكم	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+أُولَالِكَ	اولالك	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+تَانِكَ	تانك	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+تِلْكَ	تلك	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+تِلْكُمُ	تلكم	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+تِهِ	ته	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+تِيكَ	تيك	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+ثَمََّ	ثم	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ثَمَّةَ	ثمة	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ثَمََّتَ	ثمت	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ذَا	ذا	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ذَاكَ	ذاك	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+ذَانِكَ	ذانك	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ذَلِكَ	ذلك	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+ذِهِ	ذه	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+ذَيْنِ	ذين	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هَؤُلَاءِ	هؤلاء	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+هَاتَانِ	هاتان	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هَاتَيْنِ	هاتين	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هَاهُنَا	هاهنا	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+هَذَا	هذا	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+هَذَانِ	هذان	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هَذِهِ	هذه	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+هَذِي	هذي	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هَذَيْنِ	هذين	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هُنَا	هنا	1	إشارة	مبني	demonstrative_pronouns.json	2		false	OK
+هُنَاكَ	هناك	1	إشارة	مبني	demonstrative_pronouns.json	1		false	OK
+هُنَالِكَ	هنالك	1	إشارة	مبني	demonstrative_pronouns.json	3		false	OK
+أَ	ا	1	استفهام	مبني	interrogative_letters_tools.json	5	أَ	false	OK
+هَلْ	هل	1	استفهام	مبني	interrogative_letters_tools.json	1	هَلْ	false	OK
+أَخْ	اخ	1	اسم فعل	مبني	verb_name.json	1	أتألم أو أتكره	false	OK
+أُفٍّ	اف	1	اسم فعل	مبني	verb_name.json	1	أتضجر	false	OK
+النَّجَاءَكَ	النجاءك	1	اسم فعل	مبني	verb_name.json	1	أسرع	false	OK
+إِلَيَّ	الي	1	اسم فعل	مبني	verb_name.json	1	أقبل أو عجّل	false	OK
+إِلَيْكَ	اليك	1	اسم فعل	مبني	verb_name.json	1	خذ	false	OK
+إِلَيْكَ عَنْ	اليكعن	2	اسم فعل	مبني	verb_name.json	1	ابتعد أو تنحَّ	false	OK
+أَمَامَكَ	امامك	1	اسم فعل	مبني	verb_name.json	1	تقدم	false	OK
+آمِينَ	امين	1	اسم فعل	مبني	verb_name.json	1	استجب أو استمع	false	OK
+آهٍ	اه	1	اسم فعل	مبني	verb_name.json	1	أتوجع أو أشكو	false	OK
+أَوَاهُ	اواه	1	اسم فعل	مبني	verb_name.json	1	أتوجع أو أشكو	false	OK
+إِيهِ	ايه	1	اسم فعل	مبني	verb_name.json	1	زدني من الحديث أو امضِ	false	OK
+إِيهَا	ايها	1	اسم فعل	مبني	verb_name.json	1	كف أو ابتعد	false	OK
+بَجْلُ	بجل	1	اسم فعل	مبني	verb_name.json	1	يكفي	false	OK
+بَخٍ	بخ	1	اسم فعل	مبني	verb_name.json	1	أستحسن أو أعجب	false	OK
+بُطْآنَ	بطان	1	اسم فعل	مبني	verb_name.json	1	بطئ أو أبطأ	false	OK
+بَلْهَ	بله	1	اسم فعل	مبني	verb_name.json	1	اترك أو دع	false	OK
+تِيدَ	تيد	1	اسم فعل	مبني	verb_name.json	1	رويد أو اتئد	false	OK
+حُدَيَّاكَ	حدياك	1	اسم فعل	مبني	verb_name.json	1	اُبرُز	false	OK
+حَذَارِ	حذار	1	اسم فعل	مبني	verb_name.json	1	احذر	false	OK
+حِسَّ	حس	1	اسم فعل	مبني	verb_name.json	1	أَتأَلَّم	false	OK
+حَسْبُكَ	حسبك	1	اسم فعل	مبني	verb_name.json	1	كفى/كفاك أو يكفي/يكفيك	false	OK
+حَيَّ	حي	1	اسم فعل	مبني	verb_name.json	1	أقبل	false	OK
+حَيَّهَلَ	حيهل	1	اسم فعل	مبني	verb_name.json	1	أَقْبِلْ أو أَسْرِعْ	false	OK
+دُهْدُرَّيْنَ	دهدرين	1	اسم فعل	مبني	verb_name.json	1	بَطُلَ	false	OK
+دُونَكَ	دونك	1	اسم فعل	مبني	verb_name.json	1	خذ	false	OK
+رُوَيْدَ	رويد	1	اسم فعل	مبني	verb_name.json	1	أَمْهِلْ	false	OK
+رُوَيْدَكَ	رويدك	1	اسم فعل	مبني	verb_name.json	1	تمهل أو أمهل	false	OK
+زُهْ	زه	1	اسم فعل	مبني	verb_name.json	1	أَسْتَحْسِنَ	false	OK
+سُرْعَانَ	سرعان	1	اسم فعل	مبني	verb_name.json	1	سرع أو أسرع	false	OK
+شَتَّانَ	شتان	1	اسم فعل	مبني	verb_name.json	1	بعد أو افترق	false	OK
+صَهْ	صه	1	اسم فعل	مبني	verb_name.json	1	اسكت	false	OK
+عَلَيْكَ	عليك	1	اسم فعل	مبني	verb_name.json	1	الزم أو تمسك بـ	false	OK
+عِنْدَكَ	عندك	1	اسم فعل	مبني	verb_name.json	1	خذ	false	OK
+فِدَاءَ	فداء	1	اسم فعل	مبني	verb_name.json	1	ليفْدِك	false	OK
+قَدْ	قد	1	اسم فعل	مبني	verb_name.json	1	كفى أو يكفي	false	OK
+قَدْكَ	قدك	1	اسم فعل	مبني	verb_name.json	1	اكتف	false	OK
+قَطُّ	قط	1	اسم فعل	مبني	verb_name.json	1	يكفي	false	OK
+قَطُّكَ	قطك	1	اسم فعل	مبني	verb_name.json	1	أمسك	false	OK
+كَذَاكَ	كذاك	1	اسم فعل	مبني	verb_name.json	1	أمسك	false	OK
+لَدَيْكَ	لديك	1	اسم فعل	مبني	verb_name.json	1	خذ	false	OK
+مَكَانَكَ	مكانك	1	اسم فعل	مبني	verb_name.json	1	اثبت	false	OK
+مِهْ	مه	1	اسم فعل	مبني	verb_name.json	1	كف أو اكفف أو انكفف	false	OK
+نِزَالِ	نزال	1	اسم فعل	مبني	verb_name.json	1	انزل	false	OK
+هَاءَ	هاء	1	اسم فعل	مبني	verb_name.json	1	خُذْ	false	OK
+هَاؤُمُ	هاؤم	1	اسم فعل	مبني	verb_name.json	1	خذوا	false	OK
+هَاكَ	هاك	1	اسم فعل	مبني	verb_name.json	1	خذ أو تناول	false	OK
+هَاكُمْ	هاكم	1	اسم فعل	مبني	verb_name.json	1	خذ أو تناول	false	OK
+هَدَادِيكَ	هداديك	1	اسم فعل	مبني	verb_name.json	1	مهلًا بعد مهل	false	OK
+هَلُمَّ إِلَى	هلمالى	2	اسم فعل	مبني	verb_name.json	1	تعال أو أقبل	false	OK
+هَلُمَّ كَذَا	هلمكذا	2	اسم فعل	مبني	verb_name.json	1	أحضر	false	OK
+هَيَّا	هيا	1	اسم فعل	مبني	verb_name.json	1	أسرع	false	OK
+هِيتَ	هيت	1	اسم فعل	مبني	verb_name.json	1	أسرع أو أقبل	false	OK
+هَيْهَاتَ	هيهات	1	اسم فعل	مبني	verb_name.json	1	بعد	false	OK
+هِيهَلَا	هيهلا	1	اسم فعل	مبني	verb_name.json	1	ائت أو أقدم	false	OK
+وَاهًا	واها	1	اسم فعل	مبني	verb_name.json	1	أتعجب أو أتلهف	false	OK
+وَرَاءَكَ	وراءك	1	اسم فعل	مبني	verb_name.json	1	تأخر	false	OK
+وَشْكَانَ	وشكان	1	اسم فعل	مبني	verb_name.json	1	سرع أو أسرع	false	OK
+وَيْ	وي	1	اسم فعل	مبني	verb_name.json	1	أتعجب أو أعجب	false	OK
+وَيْهَ	ويه	1	اسم فعل	مبني	verb_name.json	1	أغر أو حرّض	false	OK
+وَيْهَا	ويها	1	اسم فعل	مبني	verb_name.json	1	أغر أو حرّض	false	OK
+إِذْمَا	اذما	1	جزم	مبني	jazm_tools.json	1	هي حرف يفيد الربط بين الشرط وجوابه	false	OK
+إِنْ	ان	1	جزم	مبني	jazm_tools.json	1	هي حرف شرط  يفيد الربط بين الشرط وجوابه و يجزم فعلين مضارعين الأول فعل الشرط والثاني جواب الشرط	false	OK
+أَنَّى	انى	1	جزم	مبني	jazm_tools.json	1	اسم شرط للمكان.	false	OK
+أَيُّ	اي	1	جزم	مبني	jazm_tools.json	4	اسم شرط للعاقل؛لأنَّ المضاف إليه عاقل | اسم شرط يصلح لغير العاقل ؛لأنّ المضاف إليه غير عاقل | اسم شرط للزمان ؛لأنّ الْمضاف إليه زمان | اسم شرط للمكان ؛لأنّ المضاف  إليه مكان	false	OK
+أَيَّانَ	ايان	1	جزم	مبني	jazm_tools.json	1	اسم شرط للزمان	false	OK
+أَيْنَ	اين	1	جزم	مبني	jazm_tools.json	1	اسم شرط للمكان.	false	OK
+أَيْنَمَا	اينما	1	جزم	مبني	jazm_tools.json	1	اسم شرط للمكان.	false	OK
+حَيْثُمَا	حيثما	1	جزم	مبني	jazm_tools.json	1	اسم شرط للمكان.	false	OK
+كَيْفَمَا	كيفما	1	جزم	مبني	jazm_tools.json	1	تفيد الحال	false	OK
+لِ	ل	1	جزم	مبني	jazm_tools.json	1	(لَامُ الْأمْرِ ) هي حرفٌ يدخلُ على الفعل المضارع، وتشيرُ إلى الطّلب وتنقل الدلالة من المضارع إلى الأمر ( الطلب )	false	OK
+لَا اَلنَّاهِيَة	لاالناهية	2	جزم	مبني	jazm_tools.json	1	هي حرفٌ نهي يدخلُ على الفعل المضارع وبجزمه	false	OK
+لَمْ	لم	1	جزم	مبني	jazm_tools.json	1	هي حرفٌ يُفيد نفي الفعل المضارع في الزّمنِ الماضي و ينقل الدّلالة من المضارع إلى الماضي	false	OK
+لَمَّا	لما	1	جزم	مبني	jazm_tools.json	1	هي حرفٌ يُفيد نفي الفعل المضارع في الزّمنِ الماضي و ينقل الدّلالة من المضارع إلى الماضي   و يربطههُ مع زمن المُتكلّم	false	OK
+مَا	ما	1	جزم	مبني	jazm_tools.json	1	اسم شرط لغير العاقل.	false	OK
+مَتَى	متى	1	جزم	مبني	jazm_tools.json	1	اسم شرط للزمان	false	OK
+مَنْ	من	1	جزم	مبني	jazm_tools.json	1	اسم شرط للعاقل	false	OK
+مَهْمَا	مهما	1	جزم	مبني	jazm_tools.json	1	اسم شرط لغير العاقل.	false	OK
+أَجَلْ	اجل	1	جواب	مبني	letters_answers.json	1	لتصديق الخبر أو تحقيق الطلب	false	OK
+إِنَّ	ان	1	جواب	مبني	letters_answers.json	1	تستخدم لتصديق الخبر	false	OK
+إِيْ	اي	1	جواب	مبني	letters_answers.json	1	يستخدم للإجابة على الاستفهام والتأكيد	false	OK
+بَجَلْ	بجل	1	جواب	مبني	letters_answers.json	1	يستخدم في سياقات خاصة مع النفي الشديد	false	OK
+بَلَى	بلى	1	جواب	مبني	letters_answers.json	1	تنقض النفي المتقدم وتؤكد الإيجاب	false	OK
+كَلَّا	كلا	1	جواب	مبني	letters_answers.json	1	يستخدم لنفي الجملة المنفية بشكل قاطع.	false	OK
+نَعَمْ	نعم	1	جواب	مبني	letters_answers.json	1	لتصديق المخبر أو الإعلام المستفهم أو وعد طالب	false	OK
+إِلَى	الى	1	حرف جر	مبني	preposition_meanings.json	3	* انتهاء الغاية الزمانية أو المكانية | * تأتي بمعنى (مع) | * تأتي بمعنى (عند)	false	OK
+بِ	ب	1	حرف جر	مبني	preposition_meanings.json	10	"*الإلصاق حقيقياً | * الإلصاق مجازياً | * الاستعانة | * السببية والتعليل | * التعدية | * العوض أو المقابلة | * البدل ""أي بلا مقابلة"" | * الظرفية | * المصاحبة | * القسم"	false	OK
+تَ	ت	1	حرف جر	مبني	preposition_meanings.json	1	"تختص التاء ( تَاءُ الْقَسَمِ ) بثلاث كلمات هي: ""تالله، تربَ الكعبة، تربيِّ"" فهي أقل حروف الجر استعمالاً."	false	OK
+حَاشَا	حاشا	1	حرف جر	مبني	preposition_meanings.json	1	تعني الاستثناء	false	OK
+حَتَّى	حتى	1	حرف جر	مبني	preposition_meanings.json	2	* انتهاء الغاية ( الزمانية والمكانية ) | * تأتي للتعليل (مرادفة اللام)	false	OK
+خَلَا	خلا	1	حرف جر	مبني	preposition_meanings.json	1	تعني الاستثناء	false	OK
+رُبَّ	رب	1	حرف جر	مبني	preposition_meanings.json	2	* التكثير | * التقليل	false	OK
+عَدَا	عدا	1	حرف جر	مبني	preposition_meanings.json	1	تعني الاستثناء	false	OK
+عَلَى	على	1	حرف جر	مبني	preposition_meanings.json	6	* معناها العام الاستعلاء حقيقياً | * الاستعلاء مجازيّاً | * التعليل | * بمعنى (في) | * بمعنى (مع) | * الاستدراك	false	OK
+عَنْ	عن	1	حرف جر	مبني	preposition_meanings.json	3	المجاوزة والبعد | * تأتي بمعنى بعد | * للبدلية	false	OK
+فِي	في	1	حرف جر	مبني	preposition_meanings.json	3	الظرفية حقيقة | * الظرفية المجازية | * للتعليل	false	OK
+كَ	ك	1	حرف جر	مبني	preposition_meanings.json	3	* غالباً تأتي بمعنى (التشبيه) | * تأتي أحياناً بمعنى (على) | * تأتي للتعليل	false	OK
+لِ	ل	1	حرف جر	مبني	preposition_meanings.json	7	* الاختصاص | * التعليل | * انتهاء الغاية | * الصيرورة | * الظرفية | * الاستغاثة | * التعجب	false	OK
+مُذْ	مذ	1	حرف جر	مبني	preposition_meanings.json	2	"* تكونان حرفي جر تفيدان ابتداء الغاية إن كان الزمان ماضياً | * تكونان بمعنى ""في"" إن كان الزمان حاضراً"	false	OK
+مِنَ	من	1	حرف جر	مبني	preposition_meanings.json	5	* معناها العام: ابتداء الغاية | * التبعيض | * البيان لجنس ما قبلها | * البدلية | * التعليل	false	OK
+مُنْذُ	منذ	1	حرف جر	مبني	preposition_meanings.json	2	"* تكونان حرفي جر تفيدان ابتداء الغاية إن كان الزمان ماضياً | * تكونان بمعنى ""في"" إن كان الزمان حاضراً"	false	OK
+وَ	و	1	حرف جر	مبني	preposition_meanings.json	1	"*أما الواو ( وَاوُ الْقَسَمِ) فتدخل على مقسم به ظاهر مثل: ""والله وفي القرآن مثل:﴿وَالشَّمْسِ وَضُحَاهَا﴾"	false	OK
+إِذَا	اذا	1	شرط	مبني	conditional_letters_tools.json	1	إِذَا	false	OK
+إِذْمَا	اذما	1	شرط	مبني	conditional_letters_tools.json	1	إِذْمَا	false	OK
+أَمَّا	اما	1	شرط	مبني	conditional_letters_tools.json	1	أَمَّا	false	OK
+إِنْ	ان	1	شرط	مبني	conditional_letters_tools.json	1	إِنْ	false	OK
+أَنَّى	انى	1	شرط	مبني	conditional_letters_tools.json	1	أَنَّى	false	OK
+أَيَّ	اي	1	شرط	مبني	conditional_letters_tools.json	1	أَيَّ	false	OK
+أَيْنَ	اين	1	شرط	مبني	conditional_letters_tools.json	1	أَيْنَ	false	OK
+أَيْنَمَا	اينما	1	شرط	مبني	conditional_letters_tools.json	1	أَيْنَمَا	false	OK
+حَيْثُمَا	حيثما	1	شرط	مبني	conditional_letters_tools.json	1	حَيْثُمَا	false	OK
+كُلَّمَا	كلما	1	شرط	مبني	conditional_letters_tools.json	1	كُلَّمَا	false	OK
+كَيْفَمَا	كيفما	1	شرط	مبني	conditional_letters_tools.json	1	كَيْفَمَا	false	OK
+لَمَّا	لما	1	شرط	مبني	conditional_letters_tools.json	1	لَمَّا	false	OK
+لَوْ	لو	1	شرط	مبني	conditional_letters_tools.json	1	لَوْ	false	OK
+لَوْلَا	لولا	1	شرط	مبني	conditional_letters_tools.json	1	لَوْلَا	false	OK
+لَوْمَا	لوما	1	شرط	مبني	conditional_letters_tools.json	1	لَوْمَا	false	OK
+مَا	ما	1	شرط	مبني	conditional_letters_tools.json	1	مَا	false	OK
+مَتَى	متى	1	شرط	مبني	conditional_letters_tools.json	1	مَتَى	false	OK
+مَتَى مَا	متىما	2	شرط	مبني	conditional_letters_tools.json	1	مَتَى مَا	false	OK
+مَنْ	من	1	شرط	مبني	conditional_letters_tools.json	1	مَنْ	false	OK
+مَهْمَا	مهما	1	شرط	مبني	conditional_letters_tools.json	1	مَهْمَا	false	OK
+أَنَا	انا	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+أَنْتَ	انت	1	ضمير	مبني	pronouns_classification.json	2	المخاطب	false	OK
+أَنْتُمْ	انتم	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+أَنْتُمَا	انتما	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+أَنْتُنَّ	انتن	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+إِيَّاكَ	اياك	1	ضمير	مبني	pronouns_classification.json	2	المخاطب	false	OK
+إِيَّاكُمْ	اياكم	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+إِيَّاكُمَا	اياكما	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+إِيَّاكُنَّ	اياكن	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+إِيَّانَا	ايانا	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+إِيَّاهُ	اياه	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+إِيَّاهَا	اياها	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+إِيَّاهُمْ	اياهم	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+إِيَّاهُمَا	اياهما	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+إِيَّاهُنَّ	اياهن	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+إِيَّايَ	اياي	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+جَرّ	جر	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+كُمْ	كم	1	ضمير	مبني	pronouns_classification.json	1	المخاطب	false	OK
+نَحْنُ	نحن	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+نَصْبٌ	نصب	1	ضمير	مبني	pronouns_classification.json	1	المتكلم	false	OK
+هُمْ	هم	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+هُمَا	هما	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+هُنَّ	هن	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+هُوَ	هو	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+هِيَ	هي	1	ضمير	مبني	pronouns_classification.json	1	الغائب	false	OK
+للجمع	للجمع	1	ضمير مستتر	مبني	hidden_pronouns.json	1		false	OK
+إِذْ	اذ	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+إِذَا	اذا	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+الْآنَ	الان	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+اَلَّلَيْلَةَ	الليلة	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+أَنَّى	انى	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+أَيَّانَ	ايان	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+أَيْنَ	اين	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+ثَمَّ	ثم	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+ثََمََّةَ	ثمة	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+حَيْثُ	حيث	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+عِوَضُ	عوض	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+غَدًا	غدا	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+قَطُّ	قط	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+لَدَى	لدى	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+مَتَى	متى	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+مُذْ	مذ	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+مُنْذُ	منذ	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+هُنَا	هنا	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+هُنَاكَ	هناك	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+هُنَالِكَ	هنالك	1	ظرف	مبني	built_in_adverbs.json	1		false	OK
+أَمْ	ام	1	عطف	مبني	coordinating_conjunctions.json	3		false	OK
+إِمَّا	اما	1	عطف	مبني	coordinating_conjunctions.json	1		false	OK
+أَوْ	او	1	عطف	مبني	coordinating_conjunctions.json	4		false	OK
+بَلْ	بل	1	عطف	مبني	coordinating_conjunctions.json	2		false	OK
+ثُمَّ	ثم	1	عطف	مبني	coordinating_conjunctions.json	1		false	OK
+حَتَّى	حتى	1	عطف	مبني	coordinating_conjunctions.json	2		false	OK
+فَ	ف	1	عطف	مبني	coordinating_conjunctions.json	2		false	OK
+لَا	لا	1	عطف	مبني	coordinating_conjunctions.json	1		false	OK
+لَكِنْ	لكن	1	عطف	مبني	coordinating_conjunctions.json	1		false	OK
+وَ	و	1	عطف	مبني	coordinating_conjunctions.json	1		false	OK
+بِضْع	بضع	1	كناية	مبني	kinaya_names.json	1		false	OK
+ذَيْتَ	ذيت	1	كناية	مبني	kinaya_names.json	1		false	OK
+كََائِنْ	كائن	1	كناية	مبني	kinaya_names.json	1		false	OK
+كَأَيِّنْ	كاين	1	كناية	مبني	kinaya_names.json	1		false	OK
+كَذَا	كذا	1	كناية	مبني	kinaya_names.json	1		false	OK
+كَمْ	كم	1	كناية	مبني	kinaya_names.json	2		false	OK
+كَيْتَ	كيت	1	كناية	مبني	kinaya_names.json	1		false	OK
+أَلْ	ال	1	موصول	مبني	relative_pronouns.json	1		false	OK
+الْأُلَى	الالى	1	موصول	مبني	relative_pronouns.json	1		false	OK
+الَّتِي	التي	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّذِي	الذي	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّذِيْنَ	الذين	1	موصول	مبني	relative_pronouns.json	2		false	OK
+اَلَّلَاْئِيْ	اللائي	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّلَاْتِيْ	اللاتي	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّلَتَانِ	اللتان	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّلَتَيْنِ	اللتين	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَّلَذَانِ	اللذان	1	موصول	مبني	relative_pronouns.json	2		false	OK
+الَلَّذَيْنِ	اللذين	1	موصول	مبني	relative_pronouns.json	2		false	OK
+أَيّ	اي	1	موصول	مبني	relative_pronouns.json	1		false	OK
+ذَاْ	ذا	1	موصول	مبني	relative_pronouns.json	1		false	OK
+ذُو	ذو	1	موصول	مبني	relative_pronouns.json	1		false	OK
+مَا	ما	1	موصول	مبني	relative_pronouns.json	4		false	OK
+مَنْ	من	1	موصول	مبني	relative_pronouns.json	5		false	OK
+آ	ا	1	نداء	مبني	vocative_particles.json	2	حرفُ نِداءٍ للبَعيدِ، أو ما هو نظيرُه، كالنَّائِمِ والغافِلِ | نداء القريب الذي لا يحتاج لمد الصوت	false	OK
+أَيْ	اي	1	نداء	مبني	vocative_particles.json	2	وهي لنِداءِ البَعيدِ. وقيل: للقَريبِ كالهَمزةِ، وقيل: للمُتَوسِّطِ. وقد تُمَدُّ، فيُقالُ: (آيْ) | وهي لنِداءِ البَعيدِ. وقيل: للقَريبِ كالهَمزةِ، وقيل: للمُتَوسِّطِ.	false	OK
+أَيَا	ايا	1	نداء	مبني	vocative_particles.json	1	نداء الشخص أو الشيء البعيد مكانيًا أو معنويًا	false	OK
+هَيَا	هيا	1	نداء	مبني	vocative_particles.json	1	وأصلُها (أَيا). يُنادى بها البعيدُ مسافةً أو حُكمًا .	false	OK
+وَا	وا	1	نداء	مبني	vocative_particles.json	1	لا تُستعمَلُ إلَّا في النُّدبةِ، وتختصُّ بنداءِ المندوب، وهو المتفجَّعُ عليه	false	OK
+يَا	يا	1	نداء	مبني	vocative_particles.json	1	وهي الأكثَرُ استعمالًا، وهي أمُّ البابِ، وهي لنداءِ البعيدِ حقيقةً	false	OK
+إِذَنْ	اذن	1	نصب	مبني	present_naseb_tools.json	1	إِذَنْ	false	OK
+أََنْ	ان	1	نصب	مبني	present_naseb_tools.json	1	أََنْ	false	OK
+أَوْ	او	1	نصب	مبني	present_naseb_tools.json	1	أَوْ	false	OK
+حَتَّى	حتى	1	نصب	مبني	present_naseb_tools.json	1	حَتَّى	false	OK
+فَ	ف	1	نصب	مبني	present_naseb_tools.json	1	فَ	false	OK
+كَيْ	كي	1	نصب	مبني	present_naseb_tools.json	1	كَيْ	false	OK
+لِ	ل	1	نصب	مبني	present_naseb_tools.json	2	لِ	false	OK
+لَنْ	لن	1	نصب	مبني	present_naseb_tools.json	1	لَنْ	false	OK
+وَ	و	1	نصب	مبني	present_naseb_tools.json	1	وَ	false	OK
+إِنَّ	ان	1	نواسخ	مبني	copulative_particle.json	2		false	OK
+كَأَنَّ	كان	1	نواسخ	مبني	copulative_particle.json	1		false	OK
+لَا	لا	1	نواسخ	مبني	copulative_particle.json	1		false	OK
+لَعَلَّ	لعل	1	نواسخ	مبني	copulative_particle.json	1		false	OK
+لَكِنَّ	لكن	1	نواسخ	مبني	copulative_particle.json	1		false	OK
+لَيْتَ	ليت	1	نواسخ	مبني	copulative_particle.json	1		false	OK
