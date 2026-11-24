@@ -89,7 +89,7 @@ def main(argv):
                                      c['candidate_id'], c['side'], c['detached_text'], c['geometry_verdict'],
                                      ' '.join(c['left_syllables']), ' '.join(c['right_syllables']),
                                      ' '.join(str(i) for i in c['source_cells']),
-                                     ' '.join(str(i) for i in (c['left_cells'] + c['right_cells'])),
+                                     ' '.join(str(i) for i in c['residual_cells']),
                                      str(c['boundary_cell']) if c['boundary_cell'] is not None else '',
                                      '; '.join(f"{e['char']}:{e['status']}" for e in c['coverage_exceptions'])])
                     continue

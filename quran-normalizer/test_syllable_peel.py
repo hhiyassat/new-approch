@@ -63,11 +63,33 @@ def test_gate_switch_is_the_cause():
         S.ELIGIBILITY_GATE = True
 
 
-def test_kaf_of_tashbih_only_before_article():
-    # كَتَبَ: الكاف ليست قبل ال فتُرفض.
-    # كَٱلۡ...: لا حد مقطعي هنا حتى يُحسم أمر ٱ الصامتة بعد الحركة؛ لذلك لا نختبر حكمها بعد.
-    c = [c for c in _cands('كَتَبَ') if c['side'] == 'left' and c['detached_text'] == 'كَ'][0]
-    assert c['final_verdict'] == 'REJECTED' and c['reason'].startswith('NO_AFFIX_CLASS')
+def test_kaf_is_pending_not_rejected_without_article():
+    # كاف التشبيه صنف مؤهل: لا تُرفض لغياب ال، وتبقى PENDING حتى تُثبت وظيفتها
+    for w in ('كَفَرُوا', 'كَمَثَلِ', 'كَصَيِّبٍ'):
+        k = [c for c in _cands(w) if c['side'] == 'left' and c['detached_text'] == 'كَ']
+        assert k and all(c['final_verdict'] == 'PENDING' for c in k), w
+        assert k[0]['reason'].startswith('KAF_FUNCTION_UNPROVEN'), w
+
+
+def test_residual_is_complement_of_detached():
+    for w in ('ٱلۡكِتَٰبُ', 'نَكْتُبُهُ', 'كَمَثَلِ'):
+        for c in _cands(w):
+            if c['final_verdict'] == 'NO_SYLLABLE_BOUNDARY':
+                continue
+            assert sorted(c['detached_cells'] + c['residual_cells']) == list(range(len(c['detached_cells']) + len(c['residual_cells']))), w
+            assert not set(c['detached_cells']) & set(c['residual_cells']), w
+
+
+def test_partition_check_rejects_overlap_and_loss():
+    import syllable_peel as S
+    try:
+        S.check_partition(3, [0, 1], [1, 2]); raise AssertionError('يجب أن يفشل التقاطع')
+    except ValueError:
+        pass
+    try:
+        S.check_partition(3, [0], [1]); raise AssertionError('يجب أن يفشل الفقد')
+    except ValueError:
+        pass
 
 
 def test_article_rule_only_for_exact_unit():

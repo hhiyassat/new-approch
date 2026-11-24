@@ -50,10 +50,8 @@ def _eligibility(word, cells, detached, side, cut):
         if c in PROCLITIC:
             return 'PENDING', 'PROCLITIC_FUNCTION_UNPROVEN: السابقة تحتاج دليل وظيفتها'
         if c == KAF:
-            # كاف التشبيه لا تُقبل إلا قبل ال؛ الكاف قبل غيرها جذر محتمل
-            if cut < len(cells) and _is_article_unit(cells, cells[cut:cut + 2], 'left'):
-                return 'PENDING', 'KAF_TASHBIH_BEFORE_ARTICLE_UNPROVEN: كاف التشبيه تحتاج دليل التركيب'
-            return 'REJECTED', 'NO_AFFIX_CLASS: الكاف هنا ليست قبل ال، فهي من أصل الجذر محتملًا'
+            # كاف التشبيه صنف مؤهل، ووظيفتها (تشبيه أو غيره، أو كاف أصلية) لم تثبت بعد
+            return 'PENDING', 'KAF_FUNCTION_UNPROVEN: الكاف قد تكون للتشبيه أو من أصل الجذر'
         if c in VERB_PREFIX:
             return 'PENDING', 'VERB_PREFIX_UNPROVEN: البادئة تحتاج دليل الفعل'
     # 3) لاحقة ضميرية متصلة بالطرف الأيمن
@@ -63,6 +61,15 @@ def _eligibility(word, cells, detached, side, cut):
     if not ELIGIBILITY_GATE:
         return 'PENDING', 'لا شهادة صرفية لهذا الجزء'
     return 'REJECTED', 'NO_AFFIX_CLASS: الجزء خارج أبواب التقشير المعتمدة'
+
+
+def check_partition(n, detached, residual):
+    """الباقي هو المتمّم المرتب للجزء المرشح. يفشل عند أي تقاطع أو فقد أو تكرار."""
+    if set(detached) & set(residual):
+        raise ValueError('تقاطع بين الجزء المرشح والباقي: ' + str(sorted(set(detached) & set(residual))))
+    if sorted(detached + residual) != list(range(n)):
+        raise ValueError('التغطية غير كاملة: فقد أو تكرار خلية')
+    return sorted(residual)
 
 
 def propose(word):
@@ -79,7 +86,8 @@ def propose(word):
         out.append(dict(
             candidate_id=f'{word}#article@solar', side='left', boundary_cell=None,
             source_cells=[cells[0].idx], left_syllables=[], right_syllables=[],
-            left_cells=[], right_cells=[c.idx for c in cells[1:]], coverage_exceptions=cov_exc,
+            residual_cells=[c.idx for c in cells[1:]], detached_cells=[cells[0].idx],
+            coverage_exceptions=cov_exc,
             detached_text=word[cells[0].span[0]:cells[0].span[1]],
             geometry_verdict='NO_SYLLABLE_BOUNDARY', geometry_reason='ٱ داخل مقطع ءَنْ',
             eligibility='NOT_EVALUATED', morphology_evidence='ال شمسية: اللام محذوفة وتحويلها مسجّل',
@@ -108,8 +116,8 @@ def propose(word):
                 source_cells=[c.idx for c in detached],
                 left_syllables=[x['shape'] for x in sylls[:k + 1]],
                 right_syllables=[x['shape'] for x in sylls[k + 1:]],
-                left_cells=[c.idx for g in groups[:k + 1] for c in g],
-                right_cells=[c.idx for g in groups[k + 1:] for c in g],
+                residual_cells=check_partition(n, [c.idx for c in detached], [c.idx for c in residual]),
+                detached_cells=[c.idx for c in detached],
                 coverage_exceptions=cov_exc,
                 detached_text=word[detached[0].span[0]:detached[-1].span[1]] if detached else '',
                 geometry_verdict=geo, geometry_reason=reason,
