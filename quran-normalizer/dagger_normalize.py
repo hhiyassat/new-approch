@@ -351,7 +351,9 @@ def is_constant(word):
 
 
 def join_split_maqsura(words, counts=None):
-    """ى منفصلة عن الكلمة قبلها (هُدࣰ | ى) خطأ في المصدر: تُلحق بها."""
+    """الحروف المنفصلة عن الكلمة قبلها خطأ في المصدر:
+    - ى منفصلة (هُدࣰ | ى): تُلحق بالكلمة قبلها.
+    - ا منفصلة بعد التنوين المفتوح (نارࣰ | ا): ألف التنوين الصامتة، تُلحق ثم تُحذف."""
     counts = Counter() if counts is None else counts
     out = []
     for w in words:
@@ -359,6 +361,8 @@ def join_split_maqsura(words, counts=None):
         if out and core == '\u0649':
             counts['SPLIT_MAQSURA_JOINED'] += 1
             out[-1] = out[-1] + w
+        elif out and core == '\u0627' and any(c in out[-1] for c in ('\u08F0', '\u064B')):
+            counts['SPLIT_TANWIN_ALIF_DROPPED'] += 1      # ألف التنوين الصامتة
         else:
             out.append(w)
     return out
