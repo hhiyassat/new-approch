@@ -115,6 +115,15 @@ def test_internal_sukun_origin_guard():
     assert Pl._internal_sukun(cells, list(range(len(cells))))[0]['origin'] == 'UNKNOWN'
 
 
+def test_unknown_sukun_away_from_cut_does_not_block():
+    # ساكن غير مرتبط بالحد (بعيد عنه بخليتين) لا يمنع الفصل الخارجي المرخّص
+    cells = build_cells('ٱلۡخِنزِيرِ')
+    cells[3].flags.append('UNMARKED')
+    a = Pl._evaluate('ٱلۡخِنزِيرِ', cells, 'ART-WRITTEN', [('ART', [0, 1]), ('HOST', [2, 3, 4, 5])],
+                     True, [], _src())
+    assert a['verdict'] == 'LICENSED', a['reason']
+
+
 def test_unknown_sukun_makes_pending():
     # الساكن الأول (شدة النون) بمصدر غير محسوم داخل المضيف: PENDING لا قبول ولا رفض
     cells = build_cells('ٱلنَّاسِ')

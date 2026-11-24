@@ -242,7 +242,8 @@ def _evaluate(word, cells, rule_id, parts, cov_ok, cov_exc, source):
         removed_ok = all(set(c.carrier for c in cells[s:e]) <= ALLOWED_REMOVED.get(r, set())
                          for r, s, e in _spans_of(parts) if r != 'HOST')
         sukun = _internal_sukun(cells[p:], all_ids[p:], word) if right['valid'] else []
-        touching = [s for s in sukun if s['origin'] == 'UNKNOWN' and s['cell_id'] in (p - 1, p, p + 1)]
+        # الحد يغيّر مقطع الخليتين المجاورتين له فقط: p-1 (يسار الحد) وp (يمينه)
+        touching = [s for s in sukun if s['origin'] == 'UNKNOWN' and s['cell_id'] in (p - 1, p)]
         cut_ok = left['valid'] and right['valid'] and not pair_cut and cov_ok
         if pair_cut:
             fails.append('شدة مقطوعة عبر الحد، والفصل عبرها غير مرخّص')
