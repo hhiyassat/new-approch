@@ -1,0 +1,39 @@
+headword	skeleton	words	domain	built	source	raw_field	raw_value	meaning	exhaustive	status
+تمييز العدد المركب	تمييزالعددالمركب	3	عدد مركب	مبني	compound_numbers.json	subject	تمييز العدد المركب		false	DESCRIPTIVE
+اعراب العدد المركب	اعرابالعددالمركب	3	عدد مركب	مبني	compound_numbers.json	subject	اعراب العدد المركب		false	DESCRIPTIVE
+الرفع	الرفع	1	عدد مركب	مبني	compound_numbers.json	subject	الرفع		false	DESCRIPTIVE
+النصب	النصب	1	عدد مركب	مبني	compound_numbers.json	subject	النصب		false	DESCRIPTIVE
+الجر	الجر	1	عدد مركب	مبني	compound_numbers.json	subject	الجر		false	DESCRIPTIVE
+اعراب المعدود	اعرابالمعدود	2	عدد مركب	مبني	compound_numbers.json	subject	اعراب المعدود		false	DESCRIPTIVE
+اعراب العدد المركب( أحد عشر )	اعرابالعددالمركب(احدعشر)	6	عدد مركب	مبني	compound_numbers.json	subject	اعراب العدد المركب( أحد عشر )		false	DESCRIPTIVE
+إعراب العدد المركب أثنا عشر	اعرابالعددالمركباثناعشر	5	عدد مركب	مبني	compound_numbers.json	subject	إعراب العدد المركب أثنا عشر		false	DESCRIPTIVE
+للمفرد المؤنث والمذكر	للمفردالمؤنثوالمذكر	3	ضمير مستتر	مبني	hidden_pronouns.json	form	للمفرد المؤنث والمذكر		false	DESCRIPTIVE
+للمفرد المذكر	للمفردالمذكر	2	ضمير مستتر	مبني	hidden_pronouns.json	form	للمفرد المذكر		false	DESCRIPTIVE
+للمفردة المؤنثة	للمفردةالمؤنثة	2	ضمير مستتر	مبني	hidden_pronouns.json	form	للمفردة المؤنثة		false	DESCRIPTIVE
+وَاوُ الجَمَاعَةِ	واوالجماعة	2	ضمير	مبني	pronouns_classification.json	pronoun	وَاوُ الجَمَاعَةِ	الغائب	false	DESCRIPTIVE
+أَلِفُ الاثْنَيْنِ	الفالاثنين	2	ضمير	مبني	pronouns_classification.json	pronoun	أَلِفُ الاثْنَيْنِ	الغائب	false	DESCRIPTIVE
+نُونُ النِّسْوَةِ	نونالنسوة	2	ضمير	مبني	pronouns_classification.json	pronoun	نُونُ النِّسْوَةِ	الغائب	false	DESCRIPTIVE
+يَاءُ المُخَاطَبَةِ	ياءالمخاطبة	2	ضمير	مبني	pronouns_classification.json	pronoun	يَاءُ المُخَاطَبَةِ	المخاطب	false	DESCRIPTIVE
+الهَاءُ (مَفْعُولٌ بِهِ) : أَكْرَمْتُهُ	الهاء(مفعولبه):اكرمته	5	ضمير	مبني	pronouns_classification.json	pronoun	الهَاءُ (مَفْعُولٌ بِهِ) : أَكْرَمْتُهُ	الغائب	false	DESCRIPTIVE
+الكَافُ (مَفْعُولٌ بِهِ) : سَأَلْتُكَ	الكاف(مفعولبه):سالتك	5	ضمير	مبني	pronouns_classification.json	pronoun	الكَافُ (مَفْعُولٌ بِهِ) : سَأَلْتُكَ	المخاطب	false	DESCRIPTIVE
+يَاءُ المُتَكَلِّمِ (مَفْعُولٌ بِهِ) : نَصَحْتَنِي	ياءالمتكلم(مفعولبه):نصحتني	6	ضمير	مبني	pronouns_classification.json	pronoun	يَاءُ المُتَكَلِّمِ (مَفْعُولٌ بِهِ) : نَصَحْتَنِي	المتكلم	false	DESCRIPTIVE
+الهَاءُ (مُضَافٌ إِلَيْهِ) : كِتَابُهُ	الهاء(مضافاليه):كتابه	5	ضمير	مبني	pronouns_classification.json	pronoun	الهَاءُ (مُضَافٌ إِلَيْهِ) : كِتَابُهُ	الغائب	false	DESCRIPTIVE
+الكَافُ (مُضَافٌ إِلَيْهِ) : قَلَمُكَ	الكاف(مضافاليه):قلمك	5	ضمير	مبني	pronouns_classification.json	pronoun	الكَافُ (مُضَافٌ إِلَيْهِ) : قَلَمُكَ	المخاطب	false	DESCRIPTIVE
+يَاءُ المُتَكَلِّمِ (مُضَافٌ إِلَيْهِ) : مَلابِسِي	ياءالمتكلم(مضافاليه):ملابسي	6	ضمير	مبني	pronouns_classification.json	pronoun	يَاءُ المُتَكَلِّمِ (مُضَافٌ إِلَيْهِ) : مَلابِسِي	المتكلم	false	DESCRIPTIVE
+الهَاءُ (فِي مَحَلِّ جَرٍّ بِحَرْفِ الجَرِّ) : إِل	الهاء(فيمحلجربحرفالجر):ال	8	ضمير	مبني	pronouns_classification.json	pronoun	الهَاءُ (فِي مَحَلِّ جَرٍّ بِحَرْفِ الجَرِّ) : إِل	الغائب	false	DESCRIPTIVE
+الكَافُ (فِي مَحَلِّ جَرٍّ بِحَرْفِ الجَرِّ) : مَع	الكاف(فيمحلجربحرفالجر):مع	8	ضمير	مبني	pronouns_classification.json	pronoun	الكَافُ (فِي مَحَلِّ جَرٍّ بِحَرْفِ الجَرِّ) : مَع	المخاطب	false	DESCRIPTIVE
+يَاءُ المُتَكَلِّمِ (فِي مَحَلِّ جَرٍّ بِحَرْفِ ال	ياءالمتكلم(فيمحلجربحرفال	7	ضمير	مبني	pronouns_classification.json	pronoun	يَاءُ المُتَكَلِّمِ (فِي مَحَلِّ جَرٍّ بِحَرْفِ ال	المتكلم	false	DESCRIPTIVE
+الهَاءُ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَا : إِنَّهُ	الهاءمعاسمانواخواتها:انه	7	ضمير	مبني	pronouns_classification.json	pronoun	الهَاءُ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَا : إِنَّهُ	الغائب	false	DESCRIPTIVE
+الكَافُ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَا : إِنَّكَ	الكافمعاسمانواخواتها:انك	7	ضمير	مبني	pronouns_classification.json	pronoun	الكَافُ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَا : إِنَّكَ	المخاطب	false	DESCRIPTIVE
+يَاءُ المُتَكَلِّمِ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَ	ياءالمتكلممعاسمانواخواته	6	ضمير	مبني	pronouns_classification.json	pronoun	يَاءُ المُتَكَلِّمِ مَعَ اسْمِ إِنَّ وَأَخَوَاتِهَ	المتكلم	false	DESCRIPTIVE
+نَا – كَضَمِيرٍ مُشْتَرَكٍ (رَفْعٌ	نا–كضميرمشترك(رفع	5	ضمير	مبني	pronouns_classification.json	pronoun	نَا – كَضَمِيرٍ مُشْتَرَكٍ (رَفْعٌ - نَصْبٌ - جَرّ	المتكلم	false	DESCRIPTIVE
+تاء المتكلم	تاءالمتكلم	2	ضمير	مبني	pronouns_classification.json	pronoun	تاء المتكلم	المتكلم	false	DESCRIPTIVE
+تاء المخاطب	تاءالمخاطب	2	ضمير	مبني	pronouns_classification.json	pronoun	تاء المخاطب	المخاطب	false	DESCRIPTIVE
+تاء المخاطبة	تاءالمخاطبة	2	ضمير	مبني	pronouns_classification.json	pronoun	تاء المخاطبة	المخاطب	false	DESCRIPTIVE
+تاء المخاطبَين	تاءالمخاطبين	2	ضمير	مبني	pronouns_classification.json	pronoun	تاء المخاطبَين	المخاطب	false	DESCRIPTIVE
+تاء المخاطبات	تاءالمخاطبات	2	ضمير	مبني	pronouns_classification.json	pronoun	تاء المخاطبات	المخاطب	false	DESCRIPTIVE
+هاء الغائبة	هاءالغائبة	2	ضمير	مبني	pronouns_classification.json	pronoun	هاء الغائبة	الغائب	false	DESCRIPTIVE
+هاء الغائبَين	هاءالغائبين	2	ضمير	مبني	pronouns_classification.json	pronoun	هاء الغائبَين	الغائب	false	DESCRIPTIVE
+هاء الغائبات	هاءالغائبات	2	ضمير	مبني	pronouns_classification.json	pronoun	هاء الغائبات	الغائب	false	DESCRIPTIVE
+كاف المخاطبَين	كافالمخاطبين	2	ضمير	مبني	pronouns_classification.json	pronoun	كاف المخاطبَين	المخاطب	false	DESCRIPTIVE
+كاف المخاطبات	كافالمخاطبات	2	ضمير	مبني	pronouns_classification.json	pronoun	كاف المخاطبات	المخاطب	false	DESCRIPTIVE
