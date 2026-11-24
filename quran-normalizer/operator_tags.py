@@ -105,21 +105,37 @@ import csv as _csv
 _HARAKAT = set('\u064B\u064C\u064D\u064E\u064F\u0650\u0651\u0652\u06E1')  # + السكون الصغير القرآني
 
 
+_ALIF_FORMS = {'أ': 'ا\u0654', 'إ': 'ا\u0655', 'آ': 'ا\u0653', 'ٱ': 'ا'}
+
+
 def vsig(text):
-    """توقيع مشكول: كل حرف أساسي مع حركاته، بلا حركة الحرف الأخير (الإعراب الآخِر يتغير بالوقف)."""
+    """توقيع مشكول: كل حرف أساسي مع علاماته مرتّبةً، بلا علامة الحرف الأخير (الإعراب الآخِر يتغير بالوقف).
+    صور الألف تُوحَّد، والهمزة السفلى المكتوبة منفصلة تُعامل علامةً على الألف."""
     units = []
     for ch in text:
-        if ch in _HARAKAT:
+        if ch in _HARAKAT or ch == '\u0654' or ch == '\u0655' or ch == '\u0653':
             if units:
                 units[-1] = units[-1] + ch
         elif ch in (TATWEEL, '\u200f') or ch.isspace() or ch in set(WAQF) or ch in set(NON_PHONETIC):
             continue
+        elif ch in _ALIF_FORMS:
+            units.append(_ALIF_FORMS[ch])
         else:
-            units.append({'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ٱ': 'ا'}.get(ch, ch))
-    if units:
-        base = ''.join(ch for ch in units[-1] if ch not in _HARAKAT)
-        units[-1] = base
-    return tuple(units)
+            units.append(ch)
+    out = []
+    for u in units:
+        letter = u[0]
+        marks = ''.join(sorted(c for c in u[1:]))
+        out.append(letter + marks)
+    if out:
+        # الحركة الآخِرة تُحذف، أما الشدة فجزء من هوية الحرف (إنَّ ليست إنْ)
+        last = out[-1]
+        out[-1] = last[0] + ('\u0651' if '\u0651' in last[1:] else '')
+    return tuple(out)
+
+
+def has_vocalization(text):
+    return any(ch in _HARAKAT for ch in text)
 
 
 def _cases_from_note(note):
@@ -150,7 +166,6 @@ def _load_vocalized_catalog():
 
 
 VOCAL = _load_vocalized_catalog()
-SKEL_KNOWN = {skeleton(o['plain']) for o in OPS if o.get('plain')}
 
 
 def _unit_boundary(word):
@@ -174,6 +189,7 @@ def _unit_boundary(word):
 
 
 _BUILT = None
+_BUILT_VOCAL = None
 
 
 def _built_skeletons():
@@ -190,7 +206,26 @@ def _built_skeletons():
     return _BUILT
 
 
-def _built_prefix(sk):
+def _built_vocal_full():
+    """مداخل المبنيات المشكولة (من المعجم). لا تُطابَق إلا كاملةً بالشكل."""
+    global _BUILT_VOCAL
+    if _BUILT_VOCAL is None:
+        import csv, os
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lexicon', 'mabniyat.tsv')
+        _BUILT_VOCAL = set()
+        if os.path.exists(path):
+            for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t'):
+                head = (r.get('headword') or '').strip()
+                if head and has_vocalization(head):
+                    _BUILT_VOCAL.add(vsig(head))
+    return _BUILT_VOCAL
+
+
+def _built_full_match(word):
+    return vsig(word) in _built_vocal_full()
+
+
+def _unused_built_prefix(sk):
     return any(sk.startswith(b) and len(b) < len(sk) for b in _built_skeletons())
 
 
@@ -199,7 +234,12 @@ def _root_exclusion_proven(word):
     return False, 'NO_ROOT_RESOURCE'
 
 def _is_article_text(text):
-    return skeleton(text).startswith('ال')
+    try:
+        from gate import build_cells
+        c = build_cells(text)
+    except ValueError:
+        return False
+    return bool(c) and c[0].carrier == 'ء' and 'WASLA' in c[0].flags
 
 
 def _cell_ids(text, start=0):
@@ -212,15 +252,18 @@ def _cell_ids(text, start=0):
 
 def tags_for_word(word, next_word=None):
     """→ (الوسم، المعامل، الحالة المتوقعة، الدليل، الطرف المرتبط، حالة_العلاقة، حد_الوحدة، حالة_الوظيفة، خلايا_الطرف).
-    الجدول الرئيسي: عوامل الكلمات الكاملة وعلاقتها بالكلمة التالية فقط.
+    القاعدة: لا قرار على نص غير مشكول. الجدول الرئيسي: عوامل الكلمات الكاملة المطابقة بالشكل وعلاقتها بالكلمة التالية.
     السوابق المتصلة تبقى في التشخيص (DIAGNOSTIC_ONLY) مع سبب الحجب."""
     out = []
-    sk = skeleton(word)
-    if vsig(word) in VOCAL:
-        rows_v = VOCAL[vsig(word)]
+    if not has_vocalization(word):
+        out.append(('عامل', word, '', 'UNVOCALIZED_INPUT', word, 'DIAGNOSTIC_ONLY', 'UNVOCALIZED_TEXT_REJECTED', 'NOT_EVALUATED', ''))
+        return out
+    vs = vsig(word)
+    if vs in VOCAL:
+        rows_v = VOCAL[vs]
         evidence_v = 'WORD_OPERATOR_VOCALIZED'
-        # قرينة واحدة مؤكدة: «ما» بعدها «إلا» تكون نافية حاصرة، فتُحذف المعاني الأخرى لهذا الوقوع
-        if vsig(word) == vsig('مَا') and next_word and skeleton(next_word) == 'الا':
+        # قرينة واحدة مؤكدة بالشكل: «ما» بعدها «إلا» بالشكل تكون نافية حاصرة
+        if vs == vsig('مَا') and next_word and has_vocalization(next_word) and vsig(next_word) == vsig('إِلَّا'):
             narrowed = [r for r in rows_v if 'نفي' in r['purpose']]
             if narrowed:
                 rows_v = narrowed
@@ -240,25 +283,31 @@ def tags_for_word(word, next_word=None):
                 rel = 'CANDIDATE' if readable else 'SUSPENDED_OPERAND_UNREADABLE'
                 out.append(('معمول', label, case, 'ADJACENT_AFTER_OPERATOR', next_word, rel, 'NEXT_WORD', 'CANDIDATE_CASE', ids))
         return out
-    if sk in SKEL_KNOWN:
-        # الهيكل يطابق عاملًا لكن الشكل لا يطابق الكتالوج المشكول: لا وسم، بل تشخيص
-        ids, _ = _cell_ids(word)
-        out.append(('عامل', word, '', 'SKELETON_ONLY_NO_VOCALIZED_MATCH', word, 'DIAGNOSTIC_ONLY', 'SHAPE_NOT_IN_CATALOG', 'NOT_EVALUATED', ids))
+    try:
+        from gate import build_cells
+        cells = build_cells(word)
+    except ValueError:
         return out
-    if sk and sk[0] in PROCLITIC and len(sk) > 1:
-        o = PROCLITIC[sk[0]]
+    if len(cells) > 1 and cells[0].carrier in PROCLITIC:
+        o = PROCLITIC[cells[0].carrier]
         ok, why, shape = _unit_boundary(word)
         root_ok, root_why = _root_exclusion_proven(word)
+        if not cells[0].vowel or 'UNMARKED' in cells[0].flags:
+            ok, why = False, 'FIRST_LETTER_NOT_A_VOWELLED_UNIT'
         if not ok:
             reason = why
-        elif _built_prefix(sk):
-            reason = 'BUILT_PREFIX_BLOCKS_PROCLITIC'
+        elif _built_full_match(word):
+            reason = 'BUILT_FULL_MATCH_BLOCKS_PROCLITIC'
         elif not root_ok:
             reason = root_why
         else:
             reason = 'ELIGIBLE_BUT_NOT_TABLED'
-        ids, _ = _cell_ids(word)
+        operator_ids = str(cells[0].idx)
+        operand_ids = ' '.join(str(c.idx) for c in cells[1:])
+        operand_text = word[cells[1].span[0]:]
         func = 'UNDECIDED' if ok else 'NOT_EVALUATED'
-        out.append(('عامل', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', word, 'DIAGNOSTIC_ONLY', reason, func, ids))
-        out.append(('معمول', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', word, 'DIAGNOSTIC_ONLY', reason, func, ids))
+        if ok and _is_article_text(operand_text):
+            func = 'NEXT_ARTICLE_CANDIDATE'
+        out.append(('عامل', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', word, 'DIAGNOSTIC_ONLY', reason, func, operator_ids))
+        out.append(('معمول', o['plain'], 'جر', 'PROCLITIC_DIAGNOSTIC', operand_text, 'DIAGNOSTIC_ONLY', reason, func, operand_ids))
     return out

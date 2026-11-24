@@ -28,13 +28,20 @@ def main(argv):
             words = join_split_maqsura(rec[2].split())
             for pos, w in enumerate(words, start=1):
                 nxt = words[pos] if pos < len(words) else None
+                own = f'{rec[0]}:{rec[1]}:{pos}'
+                nxt_occ = f'{rec[0]}:{rec[1]}:{pos + 1}' if nxt is not None else ''
                 for tag, op, case, evidence, operand, relation, boundary, function, cells in T.tags_for_word(w, nxt):
-                    rows.append([rec[0], rec[1], pos, f'{rec[0]}:{rec[1]}:{pos}', w, tag, op, case,
-                                 evidence, operand, relation, boundary, function, cells])
+                    if tag == 'عامل' and evidence.startswith('WORD_OPERATOR'):
+                        related = nxt_occ                      # العامل الكامل يرتبط بالكلمة التالية
+                    else:
+                        related = own                          # المعمول المجاور أو السابقة: الطرف الآخر في الوقوع نفسه
+                    rows.append([rec[0], rec[1], pos, own, w, tag, op, case,
+                                 evidence, operand, relation, boundary, function, cells, related])
     with open(os.path.join(out_dir, 'operator_tags.tsv'), 'w', encoding='utf-8', newline='') as f:
         wr = csv.writer(f, delimiter='\t')
         header = ['سورة', 'آية', 'ترتيب_الكلمة', 'معرف_الوقوع', 'الكلمة', 'الوسم', 'العامل', 'الحالة_المتوقعة',
-                  'الدليل', 'الكلمة_المرتبطة', 'حالة_العلاقة', 'حد_الوحدة', 'حالة_الوظيفة', 'خلايا_الطرف']
+                  'الدليل', 'الكلمة_المرتبطة', 'حالة_العلاقة', 'حد_الوحدة', 'حالة_الوظيفة', 'خلايا_الطرف',
+                  'معرف_الطرف_المرتبط']
         wr.writerow(header)
         bad = [r for r in rows if len(r) != len(header)]
         if bad:

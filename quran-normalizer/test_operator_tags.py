@@ -86,7 +86,7 @@ def test_deferred_rows_are_kept_not_dropped():
     # «بِٱلۡغَيۡبِ» و«لِّلۡمُتَّقِينَ»: الحد ملتحم، فتبقى صفوفًا مؤجلة بالسبب
     for w in ('بِٱلۡغَيۡبِ', 'لِّلۡمُتَّقِينَ'):
         rows = T.tags_for_word(w)
-        assert rows and all(t[5] == 'DIAGNOSTIC_ONLY' and t[6] in ('MERGED_WITH_FOLLOWING', 'NO_CLEAN_SYLLABLES') for t in rows), w
+        assert rows and all(t[5] == 'DIAGNOSTIC_ONLY' and t[6] in ('MERGED_WITH_FOLLOWING', 'NO_CLEAN_SYLLABLES', 'FIRST_LETTER_NOT_A_VOWELLED_UNIT') for t in rows), w
 
 
 def test_min_kasra_is_jarr_and_fatha_is_conditional():
@@ -121,3 +121,4 @@ if __name__ == '__main__':
             except AssertionError as e:
                 fails += 1; print('FAIL', name, e)
     print('ALL PASS' if not fails else f'{fails} FAILED')
+    sys.exit(1 if fails else 0)
