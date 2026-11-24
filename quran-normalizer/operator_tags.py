@@ -115,7 +115,7 @@ def vsig(text):
     for ch in text:
         if ch == '\u06E1':                       # السكون الصغير القرآني هو السكون نفسه
             ch = '\u0652'
-        if ch in _HARAKAT or ch in ('\u0653', '\u0654', '\u0655'):
+        if ch in _HARAKAT or ch in ('\u0653', '\u0654', '\u0655', '\u0670'):
             if units:
                 units[-1] = units[-1] + ch
         elif ch in (TATWEEL, '\u200f') or ch.isspace() or ch in set(WAQF) or ch in set(NON_PHONETIC):
@@ -141,8 +141,18 @@ def vsig_variants(op):
         return out
     last = base[-1]
     letter = last[0]
+    # الألف الخنجرية المكتوبة على الألف المقصورة: الصورة نفسها بلا الخنجرية، تحويل إملائي مرخّص مسجّل
+    if letter == '\u0649' and '\u0670' not in last[1:]:
+        dagger = base[:-1] + [letter + ''.join(sorted(list(last[1:]) + ['\u0670']))]
+        if tuple(dagger) not in [k for k, _ in out]:
+            out.append((tuple(dagger), 'DAGGER_ALIF_ORTHOGRAPHIC_VARIANT'))
     if letter not in _FINAL_CAPABLE:
         return out
+    # الحرف الأخير بلا علامة مكتوبة يُقرأ ساكنًا وقفيًا: تحويل مرخّص مسجّل، لا حركة مختلقة
+    if all(c == '\u0652' for c in last[1:]):
+        bare = base[:-1] + [letter]
+        if tuple(bare) not in [k for k, _ in out]:
+            out.append((tuple(bare), 'FINAL_UNMARKED_PAUSAL_SUKUN'))
     for mark, rule in (('\u064E', 'FINAL_FATHA_VARIANT'), ('\u064F', 'FINAL_DAMMA_VARIANT'),
                        ('\u0650', 'FINAL_KASRA_VARIANT'), ('\u0652', 'FINAL_SUKUN_VARIANT')):
         cand = base[:-1] + [letter + ''.join(sorted(set(last[1:]) - _FINAL_VOWEL_MARKS) + [mark])]
@@ -158,6 +168,25 @@ def effective_vowel(cells, idx):
     if c.vowel is None and c.shadda == 'first' and idx + 1 < len(cells) and cells[idx + 1].shadda == 'second':
         return cells[idx + 1].vowel
     return c.vowel
+
+
+def _consonants(text):
+    """الحروف الأساسية من نص مشكول فقط (تُحذف الحركات، ولا يُقرأ منها قرار)."""
+    return ''.join(u[0] for u in vsig(text))
+
+
+_CONS_MAP = None
+
+
+def _consonant_shape_hit(word):
+    """اسم العامل إن تطابق هيكله الصامتي من النص المشكول، ولم تتطابق صورته المشكولة."""
+    global _CONS_MAP
+    if _CONS_MAP is None:
+        _CONS_MAP = {}
+        for key, rows_k in VOCAL.items():
+            for r in rows_k:
+                _CONS_MAP.setdefault(''.join(u[0] for u in key), r['operator'])
+    return _CONS_MAP.get(_consonants(word))
 
 
 def has_vocalization(text):
@@ -342,6 +371,7 @@ def tags_for_word(word, next_word=None):
         evidence_v = 'WORD_OPERATOR_VOCALIZED'
         if all(r.get('variant') != 'EXACT' for r in rows_v):
             evidence_v = 'WORD_OPERATOR_FINAL_VARIANT'
+            variant_rule = sorted({r.get('variant') for r in rows_v})[0]
         # قرينة واحدة مؤكدة بالشكل: «ما» بعدها «إلا» بالشكل تكون نافية حاصرة
         if vs == vsig('مَا') and next_word and has_vocalization(next_word) and vsig(next_word) == vsig('إِلَّا'):
             narrowed = [r for r in rows_v if 'نفي' in r['purpose']]
@@ -368,7 +398,13 @@ def tags_for_word(word, next_word=None):
         cells = build_cells(word)
     except ValueError:
         return out
-    if len(cells) > 1 and cells[0].carrier in PROCLITIC:
+    cons_hit = _consonant_shape_hit(word)
+    if cons_hit:
+        ids, _ = _cell_ids(word)
+        out.append(('عامل', cons_hit, '', 'CONSONANTS_MATCH_SHAPE_DIFFERS', word, 'DIAGNOSTIC_ONLY', 'NO_VOCALIZED_MATCH', 'NOT_EVALUATED', ids))
+        return out
+    letters_n = len([u for u in vsig(word) if u])
+    if letters_n > 1 and cells[0].carrier in PROCLITIC:
         o = PROCLITIC[cells[0].carrier]
         has_vowel = effective_vowel(cells, 0) is not None
         ok, why, shape = _unit_boundary(word)
@@ -384,8 +420,8 @@ def tags_for_word(word, next_word=None):
         else:
             reason = 'ELIGIBLE_BUT_NOT_TABLED'
         operator_ids = str(cells[0].idx)
-        operand_ids = ' '.join(str(c.idx) for c in cells[1:])
-        operand_text = word[cells[1].span[0]:]
+        operand_ids = ' '.join(str(c.idx) for c in cells[1:]) or ''
+        operand_text = word[cells[1].span[0]:] if len(cells) > 1 else word[cells[0].span[1]:]
         func = 'UNDECIDED' if ok else 'NOT_EVALUATED'
         if ok and _is_article_text(operand_text):
             func = 'NEXT_ARTICLE_CANDIDATE'
